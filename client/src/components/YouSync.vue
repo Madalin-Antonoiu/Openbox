@@ -29,9 +29,6 @@
 		</div>
 
 
-
-
-
 		<div id="youtubeLogs">
 			<div id="bar"> 
 				<span id="whatfor">Youtube Logs</span>
@@ -77,7 +74,9 @@
 		</div>
 
 
-			<span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
+		<span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
+
+
 	</div>
 </template>
 

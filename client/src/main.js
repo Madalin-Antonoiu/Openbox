@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
+import router from './router'
+
 import VueYoutube from 'vue-youtube'
 import VueChatScroll from 'vue-chat-scroll'
 import moment from 'moment'
@@ -7,6 +9,15 @@ import moment from 'moment'
 
 Vue.use(VueChatScroll)
 Vue.use(VueYoutube)
+
+
+new Vue({
+    router,
+    render: h => h(App),
+}).$mount('#app')
+
+
+
 
 Vue.component('dynamic-from-now', {
     name: 'DynamicFromNow',
@@ -40,6 +51,3 @@ Vue.component('dynamic-from-now', {
 
 Vue.config.productionTip = false
 
-new Vue({
-    render: h => h(App),
-}).$mount('#app')
