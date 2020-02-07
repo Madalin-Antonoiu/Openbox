@@ -7,10 +7,10 @@
       <NewMessage :name="name" :room="room" />
     </div>
 
-    <div id="sync">
+    <!-- <div id="sync">
       <YouSync />
     </div>
-  
+   -->
 
     <!-- <footer id="footer">
       <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
@@ -24,7 +24,7 @@
   import ChatHeader from '@/components/ChatHeader'
   import ChatMessages from '@/components/ChatMessages'
   import NewMessage from '@/components/NewMessage'
-  import YouSync from '@/components/YouSync'
+  // import YouSync from '@/components/YouSync'
 
   export default {
     name: 'Chat',
@@ -33,7 +33,7 @@
       ChatHeader,
       ChatMessages,
       NewMessage,
-      YouSync,
+      // YouSync,
     },
 }
 
@@ -42,16 +42,18 @@
 
 <style scoped>
   #cht{
-    position:absolute;
+    /* display:none; */
+    /* position:absolute;
     width:400px;
     right:5px;
-    top:5px;
+    top:5px; */
   }
   #sync{
-    position:absolute;
+    /* display:none; */
+    /* position:absolute;
     width:400px;
     left:5px;
-    top:5px;
+    top:5px; */
   }
 
 

@@ -1,7 +1,7 @@
 <template>
 
     <ul class="chat-messages" v-chat-scroll id="capture"> <!-- capture Must stay here for full chat record image + CLEAR CHAT -->
-      <li  v-for="message in messages" :key="message.id" :class="{'message right-message': name === message.name, 'message left-message': name !== message.name}">
+      <li  ref="chat-message" v-for="message in messages" :key="message.id" :class="{'message right-message': name === message.name, 'message left-message': name !== message.name}">
         <span class="message-avatar"
           :style='
             [ name !== message.name ?
@@ -25,11 +25,12 @@
 
             <span v-if="message.embed">
               <div class="video-container">
-                <iframe width="560" height="315" loading="lazy"
+                <YouSyncMessage :leID="message.embed" :messageid="message.id"/>
+                <!-- <iframe width="560" height="315" loading="lazy"
                   :src=" 'https://www.youtube.com/embed/' + message.embed" 
                   frameborder="0" 
                   allowfullscreen>
-                </iframe>
+                </iframe> -->
               </div>
             </span>
 
@@ -47,9 +48,14 @@
 <script>
   import db from '@/firebase/init'
   import moment from 'moment'
+  import YouSyncMessage from '@/components/YouSyncMessage'
+
   export default {
     name: 'ChatBody',
-    props: ['name', 'room'],
+    props: ['name', 'room', 'leID', 'messageid'],
+    components: {
+      YouSyncMessage,
+    },
     data(){
       return {
         messages: [],

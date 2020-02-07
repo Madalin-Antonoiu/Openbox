@@ -5,10 +5,11 @@ import router from './router'
 import VueYoutube from 'vue-youtube'
 import VueChatScroll from 'vue-chat-scroll'
 import moment from 'moment'
-
+import UniqueId from 'vue-unique-id';
 
 Vue.use(VueChatScroll)
 Vue.use(VueYoutube)
+Vue.use(UniqueId);
 
 
 new Vue({
