@@ -1,15 +1,20 @@
 <template>
 	<div id="YouSync">
 
-		<youtube id="player"
-			ref="youtube" 
-			:video-id="videoId" 
-			:player-vars="playerVars"
-			@ready="ready" 
-			@playing="playing" 
-			@paused="paused"
-			@ended="ended"	
-		></youtube>
+		<div id="mainView" style="position:relative;">
+			<youtube id="player"
+				ref="youtube" 
+				:video-id="videoId" 
+				:player-vars="playerVars"
+				@ready="ready" 
+				@playing="playing" 
+				@paused="paused"
+				@ended="ended"	
+				loading="lazy"
+			></youtube>
+			<span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
+		</div>
+
 				
 		<div class="youtubeControls"> 
 				<!-- <button @click="playVideo">Play</button> Hidden from view now
@@ -74,7 +79,6 @@
 		</div>
 
 
-		<span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
 
 
 	</div>
@@ -148,13 +152,13 @@
 							// // Forces video to play right after seek
 							//
 							//console.log('They are not in .2 sync')
-							this.alert= "Offsync by." + parseFloat(this.difference.toFixed(3))
+							this.alert= "🟡" + parseFloat(this.difference.toFixed(3))
 						}
 						
 						else {
 							//console.log('Clients are in sync')
-							
-							this.alert= "Clients in sync." + parseFloat(this.difference.toFixed(3))
+							//Clients in sync
+							this.alert= "🟢" + parseFloat(this.difference.toFixed(3))
 						}
 					});
 					
@@ -425,12 +429,15 @@
 		#alert{
 			position: absolute;
 			z-index: 99999;
-			bottom: 0;
-			left:50%;
-			right:50%;
-			background: white;
-			border: 1px solid orange;
-			width: 170px;
+			top: 2px;
+			right:2px;
+			/* background: white;
+			border: 1px solid orange; */
+			color:black;
+			background:white;
+			opacity:0.6;
+			width:55px;
+			font-size:11px;
 		}
 		#youtubeLogs{
 		

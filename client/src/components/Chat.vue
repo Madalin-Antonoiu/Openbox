@@ -1,11 +1,16 @@
 <template>
 
   <div class="chat" >
+    <div id="cht">
+      <ChatHeader :name="name" :room="room"  />
+      <ChatMessages :name="name" /> <!-- No longer need to pass room-->
+      <NewMessage :name="name" :room="room" />
+    </div>
 
-    <ChatHeader :name="name" :room="room"  />
-    <ChatMessages :name="name" /> <!-- No longer need to pass room-->
-    <NewMessage :name="name" :room="room" />
-   
+    <div id="sync">
+      <YouSync />
+    </div>
+  
 
     <!-- <footer id="footer">
       <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
@@ -19,7 +24,7 @@
   import ChatHeader from '@/components/ChatHeader'
   import ChatMessages from '@/components/ChatMessages'
   import NewMessage from '@/components/NewMessage'
-  
+  import YouSync from '@/components/YouSync'
 
   export default {
     name: 'Chat',
@@ -28,13 +33,31 @@
       ChatHeader,
       ChatMessages,
       NewMessage,
+      YouSync,
     },
 }
 
 </script>
 
 
-<style>
+<style scoped>
+  #cht{
+    position:absolute;
+    width:400px;
+    right:5px;
+    top:5px;
+  }
+  #sync{
+    position:absolute;
+    width:400px;
+    left:5px;
+    top:5px;
+  }
+
+
+
+
+
 
   .canvas {
     position:relative;
@@ -57,7 +80,7 @@
 
 
 #footer{
-background-color: #212121;
+  background-color: #212121;
     color: #aaa;
     text-align: center;
     width: 100%;

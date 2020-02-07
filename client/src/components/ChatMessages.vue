@@ -25,7 +25,7 @@
 
             <span v-if="message.embed">
               <div class="video-container">
-                <iframe width="560" height="315" 
+                <iframe width="560" height="315" loading="lazy"
                   :src=" 'https://www.youtube.com/embed/' + message.embed" 
                   frameborder="0" 
                   allowfullscreen>
