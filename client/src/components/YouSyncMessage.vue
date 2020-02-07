@@ -203,7 +203,7 @@
 			this.socket.on('play_all', data => {  
                 
                 //this.events.push(data);
-                
+
                 this.$refs[data.targetId].player.playVideo(); // Hitting play button only on the id that generated it
                 // }
             })
@@ -282,7 +282,12 @@
 
 			//setInterval(this.getNow, 5000);//refs are available only after mounted
 
-		},
+        },
+        computed: {
+            player() {
+                return this.$refs[this.uniqueID].youtube.player
+            }
+        },
 		methods: {
 				seekOnOthers(event){
                     // Get Sender current time and pass it along seekOnOthers
@@ -320,10 +325,12 @@
 					this.socket.emit("backToStart_all", targetId)
 				},
                 startTheShow(event){
-                    var targetId = event.currentTarget.id;
-                    console.log(targetId+ "from outside")
-					 window.setInterval(() => {
-                         console.log(targetId + "from inside setInterval")
+                    
+                    // console.log(targetId+ "from outside") checked
+                     let targetId = event.currentTarget.id;
+                     this.repetitive = window.setInterval(() => {
+                        //  console.log(targetId + "from inside setInterval") chcked
+
 						this.$refs[targetId].player.getCurrentTime().then(value => {
 							// Do something with the value here
 							//console.log(value)
@@ -336,7 +343,7 @@
 						}, 1500)
                 },
                 stopTheShow(){
-                    clearInterval(window.clearInterval());
+                    window.clearInterval(this.repetitive);
                 },
 
 

@@ -1,7 +1,6 @@
 const Express = require("express")(); //constructor (inst. of var app =express())
 const Http = require("http").Server(Express);
 const Socketio = require("socket.io")(Http);
-const sessionsMap = {}
 
 //Socketio.emit - sends to all, including sender
 //socket.broadcast.emit - sends to all BUT sender
@@ -44,9 +43,6 @@ Socketio.on("connection", socket => {
         //     } 
 
     });
-
-
-
 
     socket.on('play_all', (value, targetId) => {
 
