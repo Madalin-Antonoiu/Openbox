@@ -11,6 +11,7 @@
     "core-js": "^3.4.4",
     "dom-to-image-more": "^2.8.0",
     "firebase": "^7.8.1",
+    "materialize-css": "^1.0.0-rc.2",
     "moment": "^2.24.0",
     "socket.io": "^2.3.0",
     "v-emoji-picker": "^2.0.8",

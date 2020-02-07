@@ -5,16 +5,16 @@
 </template>
 
 <script>
-
+/*eslint-disable*/
 
 export default {
   name: 'App',
-    //   mounted(){
-    //     document.addEventListener('DOMContentLoaded', function() {
-    //       var elems = document.querySelectorAll('.modal');
-    //       var instances = M.Modal.init(elems, options);
-    //     });
-    // }
+      mounted(){
+        document.addEventListener('DOMContentLoaded', function() {
+          var elems = document.querySelectorAll('.modal');
+          var instances = M.Modal.init(elems, options);
+        });
+    }
 }
 </script>
 

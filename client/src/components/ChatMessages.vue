@@ -99,7 +99,7 @@
     overflow-y: auto;
     padding: 10px;
     background-color: #fcfcfe;
-    height: calc(100vh - 147px); /*Ca sa dea exact minus header si new message*/ 
+    height: calc(100vh - 159px); /*Ca sa dea exact minus header si new message*/ 
     /*Container Control
     outline: 1px solid red !important;
     outline-offset: -1px;*/

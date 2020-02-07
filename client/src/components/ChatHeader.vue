@@ -9,7 +9,7 @@
 
 
       <div class="right">
-          <!-- <Modal :name="name" :room="room"/> -->
+           <Modal :name="name" :room="room"/> 
           <a class="btn-floating btn-small waves-effect waves-light blue modal-trigger" data-target="modal1"><i class="material-icons">settings</i></a>
 
       </div>
@@ -21,14 +21,14 @@
 </template>
 
 <script>
-  // import Modal from '@/components/Modal'
+  import Modal from '@/components/Modal'
 
 export default {
     name: 'ChatHeader',
     props: ['name','room'],
-    // components: {
-    //   Modal,
-    // }
+    components: {
+      Modal,
+    }
 }
 </script>
 

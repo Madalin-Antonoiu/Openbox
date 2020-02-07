@@ -67,7 +67,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="css">
+<style scoped>
 
  .card{
     max-width: 450px;

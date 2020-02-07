@@ -34,10 +34,10 @@
 </template>
 
 <script>
-/*eslint-disable */
-import db from '@/firebase/init'
-import VEmojiPicker from "v-emoji-picker";
-export default {
+  /*eslint-disable */
+  import db from '@/firebase/init'
+  import VEmojiPicker from "v-emoji-picker";
+  export default {
     name: 'NewMessage',
     props: ['name', 'room'],
     components : {
@@ -55,88 +55,6 @@ export default {
         }
     },
     methods: {
-      // addMessage () {
-      //   //Tot ce inseamna visual change bazat pe ce scriu sa fie mutat in keyup event!
-      //   //##### The script i love the most from all i have ever written (2020) #########
-      //   //This should be in place of AddMessage, and only relate to keyevents when needed via method
-      //     //SHOULD BE ADDED BACK TO KEYUP LISTENER IF YOU WANT INSTANT CHANGE IN LOOK () Will only happen on enter if addmessage()
-      //   if (this.newMessage.startsWith("/", 0)){ //main if
-      //     console.log('Started with /')
-      //     //if my input string has s on second position
-      //       if (this.newMessage.startsWith("s", 1)){
-      //         //Show Google icon
-      //         document.getElementById('submit').style.paddingLeft="23px"; //Move cursor with padding left on icon show
-      //         document.getElementById('scriptIcon').style.backgroundImage = "url('https://image.flaticon.com/icons/svg/281/281764.svg')"
-      //         document.getElementById('scriptIcon').classList.remove('displayNone')
-      //         this.newMessage =""
-      //         document.getElementById('submit').placeholder="Search on Google..."
-      //         console.log('Show Google icon')
-      //             //Then if i press Enter.....
-      //               if (event.key == "Enter"){
-      //                 // let typed = this.newMessage.replace('/s',''); //Removes the /s from input for the Google searc // no longer needed
-      //                 window.open('https://google.com/search?q='+ typed )
-      //                 this.newMessage = ""
-      //               } else {
-      //                 console.log('Apasa o data Enter-ul ala...')
-      //               }
-      //       } else if (this.newMessage.startsWith("y", 1)) {
-      //         //Show YT icon
-      //         //Group these 3 in a function and pass parameter of background Image ;)
-      //         document.getElementById('submit').style.paddingLeft="23px";
-      //         document.getElementById('scriptIcon').style.backgroundImage = "url('https://image.flaticon.com/icons/svg/185/185983.svg')"
-      //         document.getElementById('scriptIcon').classList.remove('displayNone')
-      //         this.newMessage =""
-      //         document.getElementById('submit').placeholder="Search on Youtube..."
-      //         document.getElementById("goButton").textContent="Search"
-      //         document.getElementById("goButton").style.backgroundColor="red";
-      //         console.log('Show Youtube icon')
-      //                 //..Then if i press Enter
-      //             if (event.key == "Enter"){
-      //                 let typed = this.newMessage.replace('/y','');
-      //                 window.open('https://youtube.com/results?search_query='+ typed )
-      //                 this.newMessage = ""
-      //                 document.getElementById('scriptIcon').classList.add('displayNone')
-      //                 document.getElementById('submit').style.paddingLeft="0px"; //Remove padding
-      //             }
-      //       } else if ( (!this.newMessage.includes("s", 1) || !this.newMessage.includes("y", 1) ) && event.key == "Backspace") {
-      //         //If backspace is pressed at second position, remove icon
-      //         console.log('Remove Google/Youtube icons with Backspace ONLY at position 1')
-      //         //make a function out out of these
-      //           document.getElementById('scriptIcon').classList.add('displayNone')
-      //           document.getElementById('submit').style.paddingLeft="0px"; //Move cursor back on hide
-      //           document.getElementById('submit').placeholder="Enter your message..."
-      //       } else {
-      //           console.log('No s, no y fulfilled yet.')
-      //         }   // Secondary if-else if
-      //   else {
-      //         //This should be regular messages
-      //         console.log('Not starting with /, clear all icons, these are regular messages?')
-      //         // document.getElementById('scriptIcon').classList.add('displayNone')
-      //         // document.getElementById('submit').style.paddingLeft="0px"
-      //         // document.getElementById("goButton").style.backgroundColor="";
-      //         // document.getElementById("goButton").textContent="Send";
-      //             db.collection('messages').add({
-      //                 content: this.newMessage,
-      //                 name: this.name,
-      //                 timestamp: Date.now(),
-      //                 room: this.room
-      //                 //this.room
-      //             }).catch( err =>{
-      //                 console.log(err)
-      //             })
-      //             //Clears after message sent
-      //             this.newMessage = "" // clears input
-      //             this.feedback = null // clears error
-      //         //clear chat Script to be added to /c
-      //         //   else if (script && this.newMessage.includes("/c")){
-      //         //
-      //         // const myNode = document.getElementById("capture");
-      //         // while (myNode.firstChild) {
-      //         //  myNode.removeChild(myNode.firstChild);
-      //         // }
-      //         // this.newMessage = ""
-      //     } // Main if- else,
-      // },//addMessage
       keymonitor(){
         //##### The script i love the most from all i have ever written until Feb 2020 #########
         let icon = document.getElementById('scriptIcon');
