@@ -50,4 +50,3 @@ Vue.component('dynamic-from-now', {
 })
 
 Vue.config.productionTip = false
-

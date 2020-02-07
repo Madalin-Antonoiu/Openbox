@@ -2,7 +2,7 @@
   <div class="welcome container">
     <div class="card">
       <div class="card-content center-align blurred-text">
-        <h2 class="teal-text text-lighten-2">ZapChat</h2>
+        <h2 class="teal-text text-lighten-2">OpenBox</h2>
 
           <form @submit.prevent="validateAndEnterChat">
 
