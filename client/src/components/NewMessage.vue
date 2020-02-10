@@ -4,6 +4,12 @@
   <div class="utils">
     <p id="emptySend" class="red-text center-align" v-if="feedback"> {{ feedback }}</p>
     <button @click.prevent="toogleDialogEmoji">😃</button>
+
+    <div class="something">
+           <YouSyncModal :name="name" :room="room"/> 
+          <a id="youmodal" class="btn-floating btn-small waves-effect waves-light blue modal-trigger" data-target="modal2"><i class="material-icons">settings</i></a>
+    </div>
+
   </div>
 
   <div id="frameCont" style="display:none;" class="video-container"> </div>
@@ -37,11 +43,14 @@
   /*eslint-disable */
   import db from '@/firebase/init'
   import VEmojiPicker from "v-emoji-picker";
+   import YouSyncModal from '@/components/YouSyncModal'
+
   export default {
     name: 'NewMessage',
     props: ['name', 'room'],
     components : {
        VEmojiPicker,
+       YouSyncModal
     },
     data(){
         return {
@@ -318,4 +327,14 @@
    background-image: url("https://image.flaticon.com/icons/svg/185/185983.svg");
    display: block !important;
   }
+
+  .utils #youmodal{
+    width:20px;
+    height:20px;
+    
+  }
+    .utils #youmodal i{
+   font-size:12px;
+  }
+
 </style>

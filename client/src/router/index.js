@@ -14,17 +14,17 @@ export default new Router({
             component: Welcome
         },
         {
-            path: '/youtube',
+            path: '/:room/youtube',
             name: 'YouSync',
             component: YouSync,
             props: true,
-            // beforeEnter(to, from, next) {
-            //     if (to.params.name && to.params.room) {
-            //         next()
-            //     } else {
-            //         next({ name: 'Welcome' })
-            //     }
-            // },
+            beforeEnter(to, from, next) {
+                if (to.params.room) {
+                    next()
+                } else {
+                    next({ name: 'Welcome' })
+                }
+            },
         },
 
 
