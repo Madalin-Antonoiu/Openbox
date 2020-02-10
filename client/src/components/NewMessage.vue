@@ -5,10 +5,7 @@
     <p id="emptySend" class="red-text center-align" v-if="feedback"> {{ feedback }}</p>
     <button @click.prevent="toogleDialogEmoji">😃</button>
 
-    <div id="modalo2" class="right">
-      <Modal2 /> 
-          <a class="btn-floating btn-small waves-effect waves-light blue modal-trigger" data-target="modal2"><i class="material-icons">settings</i></a>
-    </div>
+
 
   </div>
         
@@ -46,14 +43,14 @@
   /*eslint-disable */
   import db from '@/firebase/init'
   import VEmojiPicker from "v-emoji-picker";
-  import Modal2 from '@/components/Modal2'
+
 
   export default {
     name: 'NewMessage',
     props: ['name', 'room'],
     components : {
        VEmojiPicker,
-       Modal2
+ 
     },
     data(){
         return {

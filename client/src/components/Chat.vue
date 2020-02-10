@@ -47,6 +47,8 @@
     width:400px;
     right:5px;
     top:5px; */
+    position:absolute;
+    bottom:0;
   }
   #sync{
     /* display:none; */

@@ -1,39 +1,7 @@
 <template>
 	<div id="YouSync">
 
-		<div id="mainView">
-            
-                <youtube id="playCss"
-                    :unique-id="messageid"
-                    :ref="this.uniqueID"
-                    :video-id="leID" 
-                    :player-vars="playerVars"
-                    @ready="ready" 
-                    @playing="playing" 
-                    @paused="paused"
-                    @ended="ended"	
-                    loading="lazy"
-                ></youtube>
-           
-			<span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
-		</div>
-		
-		<div class="youtubeControls"> 
-				<!-- <button @click="playVideo">Play</button> Hidden from view now
-				<button @click="pauseVideo">Pause</button>
-				<button @click="seekTo">Seek To</button> -->
-				<button :id="this.uniqueID" @click="playAll($event)">Play</button>
-				<button :id="this.uniqueID" @click="pauseAll($event)">Pause</button>
-                <button :id="this.uniqueID" @click="seekOnOthers($event)">Sync</button>
-				<button :id="this.uniqueID" @click="backToStart($event)">Restart</button>
-                
-                <button :id="this.uniqueID" @click="muteAll($event)">Mute</button>
-                <button :id="this.uniqueID" @click="unmuteAll($event)">Unmute</button>
-				<button :id="this.uniqueID" @click="startTheShow($event)">Show</button>
-                <button :id="this.uniqueID" @click="stopTheShow($event)">StopShow</button>
-				<!-- <p>Message is: {{ youtubeId }}</p>   -->
-                <!--<button @click="randomKPop">RandomKPop</button>-->
-		</div>
+
 
 
 		<!-- <div id="youtubeLogs">
@@ -88,7 +56,7 @@
 
 <script>
 	/* eslint-disable */
-	import io from 'socket.io-client'; 
+
 
 
 	export default {
@@ -96,26 +64,7 @@
         props: ['name', 'room', 'leID', 'messageid'],
 		data(){
 			return {
-                socket: {},
-                playerVars: {
-                    'rel': 0,
-                    // 'controls': 0
-                },
-                context: 0,
-                position :{x: 0, y: 0},
-                videoId: 'nx3egm8xIo8',
-                events: [],
-                username: "",
-                youtubeId: "bwmSjveL3Lc", //2S24-y0Ij3Y
-                randomkpop:[],
-                currentTime: "",
-                alert: "",
-                state: "",
-                personalTime: "",
-                difference: 0,
-                uniqueID: this.messageid,
-                check: false,
-                repetitive: null
+               
                
 
 
@@ -127,7 +76,6 @@
 		},
 		created(){
            
-			this.socket = io("http://localhost:3000/"); // http://192.168.100.3:3000/" "http://localhost:3000/" Client socket to > server adress / Gitpod change 
 		},
 		mounted(){
             //  console.dir(this.$refs); 
@@ -288,150 +236,7 @@
                 return this.$refs[this.uniqueID].youtube.player
             }
         },
-		methods: {
-				seekOnOthers(event){
-                    // Get Sender current time and pass it along seekOnOthers
-                    let targetId = event.currentTarget.id;
 
-					this.$refs[targetId].player.getCurrentTime().then(value => {
-						//console.log('The one i clicked seek button is on:'+value)
-						this.socket.emit("seekOnOthers", value, targetId)
-					});
-					
-                },
-                playAll(event){
-                     let targetId = event.currentTarget.id; //Needs to be outside here
-                    //console.log(targetId + "initiated play");
-                
-					this.$refs[targetId].player.getCurrentTime().then(value => {
-						// Do something with the value here
-                        //console.log('I paused at '+ value)
-                       
-						this.socket.emit("play_all", value, targetId  )
-					});
-				},
-				pauseAll(event){
-                    let targetId = event.currentTarget.id;
-
-					this.$refs[targetId].player.getCurrentTime().then(value => {
-						// Do something with the value here
-                        //console.log('I paused at '+ value)
-                      
-						this.socket.emit("pause_all", value, targetId)
-					});
-                },
-                backToStart(event){
-                    let targetId = event.currentTarget.id;
-					this.socket.emit("backToStart_all", targetId)
-				},
-                startTheShow(event){
-                    
-                    // console.log(targetId+ "from outside") checked
-                     let targetId = event.currentTarget.id;
-                     this.repetitive = window.setInterval(() => {
-                        //  console.log(targetId + "from inside setInterval") chcked
-
-						this.$refs[targetId].player.getCurrentTime().then(value => {
-							// Do something with the value here
-							//console.log(value)
-							
-							this.socket.emit("getCurrentTime", value, targetId)
-							
-						});
-
-
-						}, 1500)
-                },
-                stopTheShow(){
-                    window.clearInterval(this.repetitive);
-                },
-
-
-
-
-
-				ready (event) { //This guys tells me state of player, OH it shouts automatically
-						this.player = event.target;
-						console.log('Player is ready.')
-						this.socket.emit("ready");
-				},
-				ended (){
-					console.log('Yay. You`ve stayed until the end . Video ended!')
-					this.socket.emit("ended");
-				}, 
-				playVideo() {
-					this.player.playVideo()
-				},
-				pauseVideo(){
-					this.player.pauseVideo()
-				},
-				// seekTo(){
-				// 	this.player.seekTo(5 , true)
-				// },
-
-				muteAll(){
-					this.socket.emit("mute_all")
-				},
-				unmuteAll(){
-					this.socket.emit("unmute_all")
-				},
-				changeSong(){
-					// console.log(this.youtubeId); OK check
-					
-					// TO DO - Determine if playlist and play it all!
-
-					//Determine if typed a full link or just ID
-					if  (this.youtubeId.includes("www.youtube.com/watch")){
-						this.socket.emit("changeSong_all", this.$youtube.getIdFromUrl(this.youtubeId))
-						//this.$refs.youtubeIdInput.value="";
-					} else {
-						this.socket.emit("changeSong_all", this.youtubeId)
-						//this.$refs.youtubeIdInput.value="";
-					}
-
-					
-						
-						//console.log(this.youtubeId)	
-						//So it can access data () with this
-				},
-
-				// All clients call these automatically when the API itself detects change
-				// playing () {
-
-				// 	// Don't initialize state here, but on server and receive ;)
-				// 	//this.state = "playing"
-
-				// 	this.player.getCurrentTime().then(value => {
-				// 		// Do something with the value here
-				// 		//console.log('See'+ value)
-						
-				// 		this.socket.emit("playing", value)
-				// 	});
-							
-				// },
-				// paused () {
-					
-				// 	this.player.getCurrentTime().then(value => {
-				// 		// Do something with the value here
-				// 		//console.log('I paused at '+ value)
-				// 		this.socket.emit("paused", value)
-				// 	});
-
-				// },
-				
-				// buffering (){
-				// 	//this.value = this.player.getPlayerState()
-					
-				// 	this.socket.emit("buffering");
-				// }, 
-				getNotifications(){
-					if (this.state !== "")
-					console.log(this.state)
-				},
-
-
-
-			},
 
 
 
@@ -441,161 +246,5 @@
 
 	<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-
-    #main-view{
-        /* position:relative; */
-    }
-
-    /*Responsive Yt Embeds*/ 
-    .video-container {
-        position: relative;
-        padding-bottom: 56.25%;
-        padding-top: 30px; height: 0; overflow: hidden;
-    }
-
-    .video-container iframe,
-    .video-container object,
-    .video-container embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    }
-
-    #alert{
-        position: absolute;
-        z-index: 99999;
-        top: 2px;
-        right:2px;
-        /* background: white;
-        border: 1px solid orange; */
-        color:black;
-        background:white;
-        opacity:0.6;
-        width:55px;
-        font-size:11px;
-    }
-    #youtubeLogs{
-    
-
-
-    }
-    #YouSync{
-        max-width:426px;
-        width:100%;
-    }
-    #playCss{
-        /* display:none; */
-        width:100%;
-        max-height:190px;
-        max-width:338px;
-        
-    }
-    .youtubeControls button{
-        background-color:lightseagreen;
-        font-size:11px;
-        /* margin-top:150px; */
-
-      
-    }
-    .youtubeControls{
-          margin-top:170px;
-    }
-    ul.list-container  {
-        list-style-type: none;
-        font-size: 14px;
-        height: 150px;
-        /* width:400px; */
-        margin:0;
-        overflow-y: auto;
-        background-color: #33485E;
-        color:#ffffff;
-        padding: 12px;
-        border-radius: 0px 0px 8px 8px;
-    }
-    .timestamp{
-        opacity: 0.75;
-        font-size:12px;
-        color: #ffffff;
-        font-weight: 400;
-        padding-left:3px;
-        float: right;
-    }
-
-    /*MacOs Terminal*/ 
-
-	#bar {
-			text-align: center;
-			/* width: 424px; */
-			height: 25px;
-			background-color: #DAD9D9;
-			margin: 0 ;
-			font-family: monospace;
-			padding: auto;
-			float: none;
-			border-radius: 5px;
-			position: relative;
-	}
-	#red {
-			background-color: #E94B35;
-			border-radius: 100%;
-			width: 15px;
-			height: 15px;
-			margin: 0 auto;
-			left: -200px;
-			bottom: -20%;
-			position:relative;
-	}
-	#yellow {
-			background-color: #f0f000;
-			border-radius: 100%;
-			width: 15px;
-			height: 15px;
-			margin: 0 auto;
-			left: -180px;
-			bottom: 40%;
-			position:relative;
-			display: block;
-	}
-	#green {
-			background-color: #1AAF5C;
-			border-radius: 100%;
-			width: 15px;
-			height: 15px;
-			margin: 0 auto;
-			left: -160px;
-			bottom: 99%;
-			position:relative;
-			display: block;
-	}
-    #whatfor{
-        position: absolute;
-        height: 15px;
-        left: 170px;
-        top: 5px;
-    }
-
-    /* .youtubeControls {} */
-    #clear{
-        float: right;
-    }
-
-    .play{
-        color: #00ff00;
-    }
-    .pause{
-            color: #f1f227;
-    }
-    .id {
-        color: #be90d4;
-    }
-    .leftRoom{
-        text-decoration: line-through;
-
-    }
-    .endView{
-        color: #ff6347
-    }
 
 	</style>
