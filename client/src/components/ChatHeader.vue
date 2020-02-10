@@ -9,9 +9,8 @@
 
 
       <div class="right">
-           <Modal :name="name" :room="room"/> 
+          <Modal :name="name" :room="room"/> 
           <a class="btn-floating btn-small waves-effect waves-light blue modal-trigger" data-target="modal1"><i class="material-icons">settings</i></a>
-
       </div>
 
 

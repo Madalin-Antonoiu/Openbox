@@ -39,7 +39,7 @@ import domtoimage from 'dom-to-image-more';
       }
     },
     mounted() {
-      const modal = document.querySelector('.modal')
+      const modal = document.getElementById('modal1')
       this.modalInstance = M.Modal.init(modal)
 
       const select = document.querySelector('select');

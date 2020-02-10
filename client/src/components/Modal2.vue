@@ -5,14 +5,14 @@
     <!-- Modal Structure -->
     <div id="modal2" class="modal">
       <div class="modal-content">
-        <p><span class="teal-text">User</span>: {{name}}</p>
-        <p><span class=" indigo-text lighten-2">Room:</span> {{room}} , <span >20 msg</span></p>
 
+        <YouSync />
       </div>
+
       <div class="modal-footer">
 
         <span class="modal-close waves-effect waves-green btn-flat">Close</span>
-     
+
       </div>
     </div>
 
@@ -21,11 +21,14 @@
 
 <script>
 /*eslint-disable*/
+ import YouSync from '@/components/YouSync'
 
 
   export default {
-    name: "YouSyncModal",
-    props: ['name', 'room'],
+    name: "Modal2",
+    components: {
+      YouSync,
+    },
     /*Materialize Global Modal */
     data() {
       return {
@@ -35,7 +38,7 @@
       }
     },
     mounted() {
-      const modal = document.querySelector('.modal')
+      const modal = document.getElementById('modal2')
       this.modalInstance = M.Modal.init(modal)
 
       const select = document.querySelector('select');
@@ -57,28 +60,16 @@
   }
 </script>
 
-<style scoped>
+<style>
   #modal2{
-    width: 400px;
+    width: 500px;
+    height:550px;
+  
+
   }
   .modal-overlay{
     opacity:0 !important;
   }
-/* Support for 3 chat history imgs side by side */
- .historyImg{ 
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: 9999;
-    max-height: 100vh;
-    max-width: 400px;
-    outline: 1px rgb(184, 90, 90) dashed;
-    outline-offset: -1px;
-  }
-   .historyImg:nth-of-type(2){
-    right:80px;
-  }
-     .historyImg:nth-of-type(3){
-    right:160px;
-  }
+
+
 </style>
