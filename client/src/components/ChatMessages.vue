@@ -1,7 +1,8 @@
 <template>
     <div> 
 
-      <div id="youtube">
+      <div id="youtube" class="displayNone" ref="ytbPanel">
+
         <div id="mainView">
                   
           <youtube id="playCss"
@@ -13,33 +14,30 @@
               @playing="playing" 
               @paused="paused"
               @ended="ended"	
-              loading="lazy"
           ></youtube>
-                
+
+          <div id="buttons"> 
+              <button :id="youtube" @click="playAll($event)">Play</button>
+              <button :id="youtube" @click="pauseAll($event)">Pause</button>
+              <button :id="youtube" @click="seekOnOthers($event)">Sync</button>
+              <button :id="youtube" @click="backToStart($event)">Restart</button>
+                      
+              <button :id="youtube" @click="muteAll($event)">Mute</button>
+              <button :id="youtube" @click="unmuteAll($event)">Unmute</button>
+              <button :id="youtube" @click="startTheShow($event)">Show</button>
+              <button :id="youtube" @click="stopTheShow($event)">StopShow</button>
+            </div>     
           <span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
+        
         </div>
           
-        <div class="youtubeControls"> 
-            <!-- <button @click="playVideo">Play</button> Hidden from view now
-            <button @click="pauseVideo">Pause</button>
-            <button @click="seekTo">Seek To</button> -->
-            <button :id="youtube" @click="playAll($event)">Play</button>
-            <button :id="youtube" @click="pauseAll($event)">Pause</button>
-                    <button :id="youtube" @click="seekOnOthers($event)">Sync</button>
-            <button :id="youtube" @click="backToStart($event)">Restart</button>
-                    
-                    <button :id="youtube" @click="muteAll($event)">Mute</button>
-                    <button :id="youtube" @click="unmuteAll($event)">Unmute</button>
-            <button :id="youtube" @click="startTheShow($event)">Show</button>
-                    <button :id="youtube" @click="stopTheShow($event)">StopShow</button>
-            <!-- <p>Message is: {{ youtubeId }}</p>   -->
-                    <!--<button @click="randomKPop">RandomKPop</button>-->
-          </div>
-          
+
+      
       </div>
 
-      <ul class="chat-messages" v-chat-scroll id="capture"> <!-- capture Must stay here for full chat record image + CLEAR CHAT -->
-      <li  ref="chat-message" v-for="message in messages" :key="message.id" :class="{'message right-message': name === message.name, 'message left-message': name !== message.name}">
+      <ul ref="ul" class="chat-messages" v-chat-scroll id="capture"> <!-- capture Must stay here for full chat record image + CLEAR CHAT -->
+       
+       <li  ref="chat-message" v-for="message in messages" :key="message.id" :class="{'message right-message': name === message.name, 'message left-message': name !== message.name}">
         <span class="message-avatar"
           :style='
             [ name !== message.name ?
@@ -80,6 +78,8 @@
 
         </div>
       </li>
+
+      <button @click="youtubePanel" class="btn-small red" style="position:absolute; bottom: 80px; right:0;">Ytb</button>
  
     </ul>
 
@@ -441,17 +441,51 @@
 					if (this.state !== "")
 					console.log(this.state)
 				},
-
-      sendID(event){
-        this.stored = event.target.id;
-        //console.log(event.target.id)
-      }
+        sendID(event){
+          this.stored = event.target.id;
+          //console.log(event.target.id)
+        },
+        youtubePanel(){
+          this.$refs.ytbPanel.classList.toggle('displayNone')
+          this.$refs.ul.classList.toggle('shortenBox')
+        }
 
 			},
   }
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
+
+  #mainView iframe {
+    width: 100%;
+    /* max-width:100%; */
+    margin:0 auto;
+    /*max-width: 500px; /* Also helpful. Optional. */
+     display:block; 
+     /* height:300px; */
+
+  }
+  #mainView #buttons {
+    max-width:338px;
+    /* max-width:100%; */
+    margin:0 auto;
+    /*max-width: 500px; /* Also helpful. Optional. */
+     display:block; 
+     /* height:100%;
+     max-height:500px; */
+  }
+    #buttons button{
+      background-color:lightseagreen;
+      font-size:10.95px;
+     
+      /* margin-top:150px; */
+      
+  }
+
+  .displayNone{
+    display:none;
+    
+  }
   .video-container {
   position: relative;
   padding-bottom: 56.25%;
@@ -467,17 +501,33 @@
     width: 100%;
     height: 100%;
   }
+   #youtube{
+     /* width:100%;
+     max-width:100%; */
+    /* height:226px; 
+    background:chocolate; */
+    /* width:100%; */
+    padding:5px;
+  }
+
+
+  .shortenBox{
+    height: calc(100vh - 379px);
+  }
+
   /*.chat-messages*/
   .chat-messages {
     overflow-y: auto;
     padding: 10px;
     background-color: #fcfcfe;
-    height: calc(100vh - 378px); /*Ca sa dea exact minus header si new message*/ 
+    
+     /*Ca sa dea exact minus header si new message*/ 
 
     /*Container Control
     outline: 1px solid red !important;
     outline-offset: -1px;*/
   }
+
   .chat-messages::-webkit-scrollbar {
     width: 6px;
   }
@@ -571,94 +621,82 @@
     background-size: cover;
     border-radius: 50%;
   }
-  #youtube{
-    height:226px; 
-    background:chocolate;
-  }
+ 
 
   
-    #main-view{
-        /* position:relative; */
-    }
+  #main-view{
+      /* position:relative; */
+  }
 
-    /*Responsive Yt Embeds*/ 
-    .video-container {
-        position: relative;
-        padding-bottom: 56.25%;
-        padding-top: 30px; height: 0; overflow: hidden;
-    }
+  /*Responsive Yt Embeds*/ 
+  .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      padding-top: 30px; height: 0; overflow: hidden;
+  }
 
-    .video-container iframe,
-    .video-container object,
-    .video-container embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    }
+  .video-container iframe,
+  .video-container object,
+  .video-container embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  }
 
-    #alert{
-        position: absolute;
-        z-index: 99999;
-        top: 2px;
-        right:2px;
-        /* background: white;
-        border: 1px solid orange; */
-        color:black;
-        background:white;
-        opacity:0.6;
-        width:55px;
-        font-size:11px;
-    }
-    #youtubeLogs{
-    
+  #alert{
+      position: absolute;
+      z-index: 99999;
+      top: 2px;
+      right:2px;
+      /* background: white;
+      border: 1px solid orange; */
+      color:black;
+      background:white;
+      opacity:0.6;
+      width:55px;
+      font-size:11px;
+  }
+  #youtubeLogs{
+  
 
 
-    }
-    #YouSync{
-        max-width:426px;
-        width:100%;
-    }
-    #playCss{
-        /* display:none; */
-        width:100%;
-        max-height:190px;
-        max-width:338px;
-        
-    }
-    .youtubeControls button{
-        background-color:lightseagreen;
-        font-size:11px;
-        /* margin-top:150px; */
-
+  }
+  #YouSync{
+      max-width:426px;
+      width:100%;
+  }
+  #playCss{
+      /* display:none; */
+      width:100%;
+      max-height:190px;
+      max-width:338px;
       
-    }
-    .youtubeControls{
-          /* margin-top:170px; */
-    }
-    ul.list-container  {
-        list-style-type: none;
-        font-size: 14px;
-        height: 150px;
-        /* width:400px; */
-        margin:0;
-        overflow-y: auto;
-        background-color: #33485E;
-        color:#ffffff;
-        padding: 12px;
-        border-radius: 0px 0px 8px 8px;
-    }
-    .timestamp{
-        opacity: 0.75;
-        font-size:12px;
-        color: #ffffff;
-        font-weight: 400;
-        padding-left:3px;
-        float: right;
-    }
+  }
 
-    /*MacOs Terminal*/ 
+  ul.list-container  {
+      list-style-type: none;
+      font-size: 14px;
+      height: 150px;
+      /* width:400px; */
+      margin:0;
+      overflow-y: auto;
+      background-color: #33485E;
+      color:#ffffff;
+      padding: 12px;
+      border-radius: 0px 0px 8px 8px;
+  }
+  .timestamp{
+      opacity: 0.75;
+      font-size:12px;
+      color: #ffffff;
+      font-weight: 400;
+      padding-left:3px;
+      float: right;
+  }
+
+  /*MacOs Terminal*/ 
 
 	#bar {
 			text-align: center;
@@ -710,7 +748,7 @@
         left: 170px;
         top: 5px;
   }
-  /* .youtubeControls {} */
+ 
   #clear{
       float: right;
   }
@@ -731,8 +769,6 @@
   .endView{
       color: #ff6347
   }
-  iframe {
-    width:200px;
-  }
+
 
 </style>
