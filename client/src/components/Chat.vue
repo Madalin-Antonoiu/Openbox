@@ -21,9 +21,9 @@
 </template>
 
 <script>
-  import ChatHeader from '@/components/ChatHeader'
-  import ChatMessages from '@/components/ChatMessages'
-  import NewMessage from '@/components/NewMessage'
+  import ChatHeader from '@/components/Chat/ChatHeader'
+  import ChatMessages from '@/components/Chat/ChatMessages'
+  import NewMessage from '@/components/Chat/NewMessage'
   // import YouSync from '@/components/YouSync'
 
   export default {

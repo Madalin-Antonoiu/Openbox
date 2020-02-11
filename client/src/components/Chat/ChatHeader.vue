@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import Modal from '@/components/Modal'
+  import Modal from '@/components/Chat/Modal'
 
 export default {
     name: 'ChatHeader',
