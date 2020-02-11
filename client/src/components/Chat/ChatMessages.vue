@@ -83,8 +83,8 @@
           <YoutubeSearch />
         </div>
 
-      <button @click="youtubePanel" class="btn-small red" style="position:absolute; bottom: 80px; right:0;">Ytb</button>
-      <button @click="youtubeSearch" class="btn-small orange" style="position:absolute; bottom: 80px; right:80px;">YtbSearch</button>
+      <button @click="youtubePanel" class="red" style="position:absolute; bottom: 75px; right:15px;font-size:11px;">Ytb</button>
+      <button @click="youtubeSearch" class="orange" style="position:absolute; bottom: 75px; right:50px;font-size:11px;">YtbSearch</button>
 
  
     </ul>
@@ -470,7 +470,7 @@
   #ytbSrch{
     position:absolute;
     top:280px;
-    height:400px;
+    height:250px;
     width:100%;
     max-width:550px;
     background:orange;

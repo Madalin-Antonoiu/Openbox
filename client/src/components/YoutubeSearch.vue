@@ -1,6 +1,6 @@
 <template>
   <div id="youtubeSearch">
-    <Header/>
+    <!-- <Header/> -->
     <SearchForm v-on:search="search"/>
     <SearchResults
       v-if="videos.length > 0"
@@ -19,7 +19,7 @@
 
 <script>
 /*eslint-disable*/
-import Header from './YoutubeSearch/Header';
+// import Header from './YoutubeSearch/Header';
 import SearchForm from './YoutubeSearch/SearchForm';
 import SearchResults from './YoutubeSearch/SearchResults';
 import Pagination from './YoutubeSearch/Pagination';
@@ -28,7 +28,7 @@ import axios from 'axios';
 export default {
   name: 'YoutubeSearch',
   components: {
-    Header,
+    // Header,
     SearchForm,
     SearchResults,
     Pagination
