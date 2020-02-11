@@ -49,9 +49,11 @@ export default {
 input,
 button {
   box-shadow: none !important;
+
 }
 
 .form-control {
   border-color: #6c757d;
+  
 }
 </style>

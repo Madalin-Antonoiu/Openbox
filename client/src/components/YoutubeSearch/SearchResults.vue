@@ -26,7 +26,7 @@
 
     <div class="card-columns" v-if="displayMode === 'grid'">
       <div class="card" v-bind:key="video.id.videoId" v-for="video in videos">
-        <VideoGridItem v-bind:video="video"/>
+        <VideoGridItem v-bind:video="video" @sendIdToParent="grabbedChildrenId"/>
       </div>
     </div>
     <div v-else>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+/*eslint-disable*/
 import VideoListItem from './VideoListItem';
 import VideoGridItem from './VideoGridItem';
 
@@ -56,9 +57,14 @@ export default {
   methods: {
     changeDisplayMode(displayMode) {
       this.displayMode = displayMode;
+    },
+    grabbedChildrenId(params) {
+      // this.storedid= params;
+      console.log(params) // Got this from VideoGridItem
+      this.$emit('sendToParent', params) //emitting further
     }
   },
-  props: ['videos', 'reformattedSearchString']
+  props: ['videos', 'reformattedSearchString','stored']
 };
 </script>
 

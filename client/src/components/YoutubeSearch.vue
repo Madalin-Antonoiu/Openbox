@@ -6,6 +6,7 @@
       v-if="videos.length > 0"
       v-bind:videos="videos"
       v-bind:reformattedSearchString="reformattedSearchString"
+      @sendToParent="grabbedIdAgain"
     />
     <Pagination
       v-if="videos.length > 0"
@@ -80,6 +81,11 @@ export default {
           this.api.nextPageToken = res.data.nextPageToken;
         })
         .catch(error => console.log(error));
+    },
+    grabbedIdAgain(params) {
+      // this.storedid= params;
+      console.log(params) // Got this from VideoGridItem
+      this.$emit('sendToParent', params) //emitting further
     }
   }
 };

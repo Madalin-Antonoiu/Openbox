@@ -1,6 +1,7 @@
 <template>
   <div id="card-contents">
-    <div class="card-thumbnail"> 
+    <div class="card-thumbnail">
+      <button :id="video.id.videoId" class="btn-small" style="position:absolute;bottom:0;" @click="sendIdToParent($event)">+</button> 
       <a :href="'https://www.youtube.com/watch?v=' + video.id.videoId" target="_blank">
         <img class="card-img-top" :src="video.snippet.thumbnails.medium.url" alt="YouTube thumbnail" width="246">
       </a>
@@ -18,8 +19,24 @@
 </template>
 
 <script>
+/*eslint-disable*/
 export default {
   name: 'VideoGridItem',
-  props: ['video']
+  props: ['video'],
+  data(){
+    return{
+      stored:""
+    }
+  },
+  methods:{
+
+    sendIdToParent(event){
+        this.stored = event.target.id;
+        // Emit event
+        console.log(this.stored);
+        this.$emit('sendIdToParent', this.stored);
+      //console.log(event.target.id)
+    },
+  }
 };
 </script>

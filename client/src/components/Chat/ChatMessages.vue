@@ -80,7 +80,7 @@
       </li>
 
         <div id="ytbSrch" ref="youtubeSearch" class="displayNone">
-          <YoutubeSearch />
+          <YoutubeSearch @sendToParent="finallyGetId"/>
         </div>
 
       <button @click="youtubePanel" class="red" style="position:absolute; bottom: 75px; right:15px;font-size:11px;">Ytb</button>
@@ -313,7 +313,13 @@
       }
     },
     methods: {
-				seekOnOthers(event){
+      finallyGetId(params){
+        this.stored = params; // Finally, params are coming from VideoGridItem > SearchResults >YoutubeSearch> HERE . Vuex overrated! ;)
+      },
+
+
+      
+			seekOnOthers(event){
                     // Get Sender current time and pass it along seekOnOthers
                     let targetId = event.currentTarget.id;
 
