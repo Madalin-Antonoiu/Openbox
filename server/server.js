@@ -24,10 +24,10 @@ Socketio.on("connection", socket => {
 
     //The magic !
     socket.on("getCurrentTime", (value, targetId) => {
-        
+
         socket.targetId = targetId;
         socket.currentTime = value; // parseFloat(value.toFixed(3));//round to 3 digits only and keep it number
-        
+
         //from broadcast which would seek only to others
         socket.broadcast.emit('getCurrentTime', { // obtain only other client's data, not mine 
             id: socket.id.substring(0, 6),
@@ -56,7 +56,7 @@ Socketio.on("connection", socket => {
                 action: "is playing for all from",
                 currentTime: socket.currentTime,
                 timestamp: socket.handshake.time,
-                targetId: socket.targetId
+                targetId: socket.targetId //data.targetId
                     //remove last 3 digits
             }) // send to all clients
 
@@ -87,7 +87,7 @@ Socketio.on("connection", socket => {
         socket.targetId = targetId;
         //console.log("Go to my moment, brothers!");
         //Broadcast to all sockets but Sender!
-       Socketio.emit('seekOnOthers', {
+        Socketio.emit('seekOnOthers', {
             action: "Sender says go to this moment : ",
             senderCurrentTime: socket.senderCurrentTime, // 2. Broadcast (send  to others) in the form of senderCurrentTime
             targetId: socket.targetId

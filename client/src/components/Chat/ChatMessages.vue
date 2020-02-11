@@ -17,15 +17,15 @@
           ></youtube>
 
           <div id="buttons"> 
-              <button :id="youtube" @click="playAll($event)">Play</button>
-              <button :id="youtube" @click="pauseAll($event)">Pause</button>
-              <button :id="youtube" @click="seekOnOthers($event)">Sync</button>
-              <button :id="youtube" @click="backToStart($event)">Restart</button>
+              <button :id="stored" @click="playAll($event)">Play</button>
+              <button :id="stored" @click="pauseAll($event)">Pause</button>
+              <button :id="stored" @click="seekOnOthers($event)">Sync</button>
+              <button :id="stored" @click="backToStart($event)">Restart</button>
                       
-              <button :id="youtube" @click="muteAll($event)">Mute</button>
-              <button :id="youtube" @click="unmuteAll($event)">Unmute</button>
-              <button :id="youtube" @click="startTheShow($event)">Show</button>
-              <button :id="youtube" @click="stopTheShow($event)">StopShow</button>
+              <button :id="stored" @click="muteAll($event)">Mute</button>
+              <button :id="stored" @click="unmuteAll($event)">Unmute</button>
+              <button :id="stored" @click="startTheShow($event)">Show</button>
+              <button :id="stored" @click="stopTheShow($event)">StopShow</button>
             </div>     
           <span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
         
@@ -63,11 +63,11 @@
             <span v-if="message.embed">
               <div class="video-container" ref="parent">
                 <!-- <YouSyncMessage :leID="message.embed" :messageid="message.id"/> -->
-                <iframe width="560" height="315" loading="lazy"
+                <!-- <iframe width="560" height="315" loading="lazy"
                   :src=" 'https://www.youtube.com/embed/' + message.embed" 
                   frameborder="0" 
                   allowfullscreen>
-                </iframe> 
+                </iframe>  TURNED OFF FOR NOW-->
                 <button :id="message.embed" class="btn-small" style="position:absolute;bottom:0;" @click="sendID($event)">+</button>
               </div>
             </span>
@@ -225,13 +225,27 @@
             })
             
 			this.socket.on('play_all', data => {  
-                
+                this.stored = data.targetId;
                 //this.events.push(data);
 
-                this.$refs.youtube.player.playVideo(); // Hitting play button only on the id that generated it
+              //You need to delay it or it won't happen
+              setTimeout(()=>{
+                     this.$refs.ytbPanel.classList.remove('displayNone')
+                    this.$refs.ul.classList.add('shortenBox')
+                this.player.playVideo();
+              },400)
+                   
+             
+          
+          
+
+
+         // Hitting play button only on the id that generated it
                 // }
-            })
-            this.socket.on('backToStart_all', data => {  
+          //need to change the videoId here
+        })
+
+        this.socket.on('backToStart_all', data => {  
 
                 //this.events.push(data);
 				this.$refs.youtube.player.seekTo(0, true)	
@@ -309,166 +323,164 @@
     },
     computed: {
       player() {
-          return this.$refs[youtube].youtube.player
+          return this.$refs.youtube.player
       }
     },
     methods: {
-      finallyGetId(params){
-        this.stored = params; // Finally, params are coming from VideoGridItem > SearchResults >YoutubeSearch> HERE . Vuex overrated! ;)
-      },
 
+    finallyGetId(params){
+    this.stored = params; // Finally, params are coming from VideoGridItem > SearchResults >YoutubeSearch> HERE . Vuex overrated! ;)
+    },
+    seekOnOthers(event){
+                // Get Sender current time and pass it along seekOnOthers
+                let targetId = event.currentTarget.id;
+
+      this.$refs.youtube.player.getCurrentTime().then(value => {
+        //console.log('The one i clicked seek button is on:'+value)
+        this.socket.emit("seekOnOthers", value, targetId)
+      });
+      
+            },
+    playAll(event){
+      let targetId = event.currentTarget.id; //Needs to be outside here
+      //console.log(targetId + "initiated play");
+            
+      this.$refs.youtube.player.getCurrentTime().then(value => {
+        // Do something with the value here
+                    //console.log('I paused at '+ value)
+                    
+        this.socket.emit("play_all", value, targetId  )
+      });
+    },
+    pauseAll(event){
+      let targetId = event.currentTarget.id;
+
+      this.$refs.youtube.player.getCurrentTime().then(value => {
+        // Do something with the value here
+                    //console.log('I paused at '+ value)
+                  
+        this.socket.emit("pause_all", value, targetId)
+      });
+            },
+            backToStart(event){
+                let targetId = event.currentTarget.id;
+      this.socket.emit("backToStart_all", targetId)
+    },
+            startTheShow(event){
+                
+                // console.log(targetId+ "from outside") checked
+                  let targetId = event.currentTarget.id;
+                  this.repetitive = window.setInterval(() => {
+                    //  console.log(targetId + "from inside setInterval") chcked
+
+        this.$refs.youtube.player.getCurrentTime().then(value => {
+          // Do something with the value here
+          //console.log(value)
+          
+          this.socket.emit("getCurrentTime", value, targetId)
+          
+        });
+
+
+        }, 1500)
+            },
+            stopTheShow(){
+                window.clearInterval(this.repetitive);
+            },
+
+    ready (event) { //This guys tells me state of player, OH it shouts automatically
+        this.player = event.target;
+        console.log('Player is ready.')
+        this.socket.emit("ready");
+    },
+    ended (){
+      console.log('Yay. You`ve stayed until the end . Video ended!')
+      this.socket.emit("ended");
+    }, 
+    playVideo() {
+      this.player.playVideo()
+    },
+    pauseVideo(){
+      this.player.pauseVideo()
+    },
+    // seekTo(){
+    // 	this.player.seekTo(5 , true)
+    // },
+
+    muteAll(){
+      this.socket.emit("mute_all")
+    },
+    unmuteAll(){
+      this.socket.emit("unmute_all")
+    },
+    changeSong(){
+      // console.log(this.youtubeId); OK check
+      
+      // TO DO - Determine if playlist and play it all!
+
+      //Determine if typed a full link or just ID
+      if  (this.youtubeId.includes("www.youtube.com/watch")){
+        this.socket.emit("changeSong_all", this.$youtube.getIdFromUrl(this.youtubeId))
+        //this.$refs.youtubeIdInput.value="";
+      } else {
+        this.socket.emit("changeSong_all", this.youtubeId)
+        //this.$refs.youtubeIdInput.value="";
+      }
 
       
-			seekOnOthers(event){
-                    // Get Sender current time and pass it along seekOnOthers
-                    let targetId = event.currentTarget.id;
+        
+        //console.log(this.youtubeId)	
+        //So it can access data () with this
+    },
 
-					this.$refs.youtube.player.getCurrentTime().then(value => {
-						//console.log('The one i clicked seek button is on:'+value)
-						this.socket.emit("seekOnOthers", value, targetId)
-					});
-					
-                },
-                playAll(event){
-                     let targetId = event.currentTarget.id; //Needs to be outside here
-                    //console.log(targetId + "initiated play");
-                
-					this.$refs.youtube.player.getCurrentTime().then(value => {
-						// Do something with the value here
-                        //console.log('I paused at '+ value)
-                       
-						this.socket.emit("play_all", value, targetId  )
-					});
-				},
-				pauseAll(event){
-          let targetId = event.currentTarget.id;
+    // All clients call these automatically when the API itself detects change
+    // playing () {
 
-					this.$refs.youtube.player.getCurrentTime().then(value => {
-						// Do something with the value here
-                        //console.log('I paused at '+ value)
-                      
-						this.socket.emit("pause_all", value, targetId)
-					});
-                },
-                backToStart(event){
-                    let targetId = event.currentTarget.id;
-					this.socket.emit("backToStart_all", targetId)
-				},
-                startTheShow(event){
-                    
-                    // console.log(targetId+ "from outside") checked
-                     let targetId = event.currentTarget.id;
-                     this.repetitive = window.setInterval(() => {
-                        //  console.log(targetId + "from inside setInterval") chcked
+    // 	// Don't initialize state here, but on server and receive ;)
+    // 	//this.state = "playing"
 
-						this.$refs.youtube.player.getCurrentTime().then(value => {
-							// Do something with the value here
-							//console.log(value)
-							
-							this.socket.emit("getCurrentTime", value, targetId)
-							
-						});
-
-
-						}, 1500)
-                },
-                stopTheShow(){
-                    window.clearInterval(this.repetitive);
-                },
-
-				ready (event) { //This guys tells me state of player, OH it shouts automatically
-						this.player = event.target;
-						console.log('Player is ready.')
-						this.socket.emit("ready");
-				},
-				ended (){
-					console.log('Yay. You`ve stayed until the end . Video ended!')
-					this.socket.emit("ended");
-				}, 
-				playVideo() {
-					this.player.playVideo()
-				},
-				pauseVideo(){
-					this.player.pauseVideo()
-				},
-				// seekTo(){
-				// 	this.player.seekTo(5 , true)
-				// },
-
-				muteAll(){
-					this.socket.emit("mute_all")
-				},
-				unmuteAll(){
-					this.socket.emit("unmute_all")
-				},
-				changeSong(){
-					// console.log(this.youtubeId); OK check
-					
-					// TO DO - Determine if playlist and play it all!
-
-					//Determine if typed a full link or just ID
-					if  (this.youtubeId.includes("www.youtube.com/watch")){
-						this.socket.emit("changeSong_all", this.$youtube.getIdFromUrl(this.youtubeId))
-						//this.$refs.youtubeIdInput.value="";
-					} else {
-						this.socket.emit("changeSong_all", this.youtubeId)
-						//this.$refs.youtubeIdInput.value="";
-					}
-
-					
-						
-						//console.log(this.youtubeId)	
-						//So it can access data () with this
-				},
-
-				// All clients call these automatically when the API itself detects change
-				// playing () {
-
-				// 	// Don't initialize state here, but on server and receive ;)
-				// 	//this.state = "playing"
-
-				// 	this.player.getCurrentTime().then(value => {
-				// 		// Do something with the value here
-				// 		//console.log('See'+ value)
-						
-				// 		this.socket.emit("playing", value)
-				// 	});
-							
-				// },
-				// paused () {
-					
-				// 	this.player.getCurrentTime().then(value => {
-				// 		// Do something with the value here
-				// 		//console.log('I paused at '+ value)
-				// 		this.socket.emit("paused", value)
-				// 	});
-
-				// },
-				
-				// buffering (){
-				// 	//this.value = this.player.getPlayerState()
-					
-				// 	this.socket.emit("buffering");
-				// }, 
-				getNotifications(){
-					if (this.state !== "")
-					console.log(this.state)
-				},
-        sendID(event){
-          this.stored = event.target.id;
-          //console.log(event.target.id)
-        },
-        youtubePanel(){
-          this.$refs.ytbPanel.classList.toggle('displayNone')
-          this.$refs.ul.classList.toggle('shortenBox')
+    // 	this.player.getCurrentTime().then(value => {
+    // 		// Do something with the value here
+    // 		//console.log('See'+ value)
+        
+    // 		this.socket.emit("playing", value)
+    // 	});
           
-          
-        },
-        youtubeSearch(){
-          this.$refs.youtubeSearch.classList.toggle('displayNone')
-        }
+    // },
+    // paused () {
+      
+    // 	this.player.getCurrentTime().then(value => {
+    // 		// Do something with the value here
+    // 		//console.log('I paused at '+ value)
+    // 		this.socket.emit("paused", value)
+    // 	});
 
-			},
+    // },
+
+    // buffering (){
+    // 	//this.value = this.player.getPlayerState()
+      
+    // 	this.socket.emit("buffering");
+    // }, 
+    getNotifications(){
+      if (this.state !== "")
+      console.log(this.state)
+    },
+    sendID(event){
+      this.stored = event.target.id;
+      //console.log(event.target.id)
+    },
+    youtubePanel(){
+      this.$refs.ytbPanel.classList.toggle('displayNone')
+      this.$refs.ul.classList.toggle('shortenBox')
+      
+      
+    },
+    youtubeSearch(){
+      this.$refs.youtubeSearch.classList.toggle('displayNone')
+    }
+
+    },
   }
 </script>
 
