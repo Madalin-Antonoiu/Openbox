@@ -4,7 +4,8 @@
   <div class="utils">
     <p id="emptySend" class="red-text center-align" v-if="feedback"> {{ feedback }}</p>
     <button @click.prevent="toogleDialogEmoji">😃</button>
-
+     <button @click="youtubePanel" class="red" style="font-size:11px;">Ytb</button>
+      <button @click="youtubeSearch" class="orange" style="font-size:11px;">YtbSearch</button>
 
 
   </div>
@@ -223,6 +224,13 @@
         return (match && match[2].length === 11)
           ? match[2]
           : null;
+      },
+      youtubePanel(){
+      document.getElementById('youtube').classList.toggle('displayNone')
+      document.getElementById('capture').classList.toggle('shortenBox')
+      },
+      youtubeSearch(){
+       document.getElementById('ytbSrch').classList.toggle('displayNone')
       }
     }, //methods
   }

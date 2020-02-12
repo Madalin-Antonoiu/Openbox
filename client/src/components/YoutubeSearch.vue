@@ -42,7 +42,7 @@ export default {
         baseUrl: 'https://www.googleapis.com/youtube/v3/search?',
         part: 'snippet',//need to add statistics
         type: 'video',
-        order: 'viewCount',
+        order: 'relevance', //viewCount
         maxResults: 12,
         q: '',
         key: 'AIzaSyCL21U-qh0NwQhH2I7WS9rinqpy8Oi3ZOE', //YOUR_API_KEY. Private Repo - Safe
@@ -97,51 +97,5 @@ export default {
     max-width:550px;
     margin:0 auto;
   }
-  .card-text{
-    color: rgb(96, 96, 96);
-    margin:10px;
-    line-height:18px;
-      font-weight:400;
-    font-family:Roboto, Arial, sans-serif;
-    font-size:13px;
-  }
-  .card-title{
-    font-size: 18px;
-    margin:0px 10px 0px 10px;
-    color:rgb(13, 13, 13);
-    font-weight:400;
-    font-family:Roboto, Arial, sans-serif;
-  }
-  .card-subtitle{
-      margin:0px 10px 0px 10px;
-    font-size:13px;
-    color:rgb(96, 96, 96);
-    font-family:Roboto, Arial, sans-serif;
-    font-weight:400;
-  }
 
-  .card-thumbnail{
-    float: left;
-    width: 246px;
-  }
-
-  .card-body{
-     float: left;
-      width: calc(100% - 246px);
-    /* max-width:374px;
-    width:100%; */
-    /* margin-bottom:16px; */
-      height:142px;
-      overflow:hidden;
-      
-  }
-  #card-contents{
-    margin-bottom:16px;
-  }
-
-  #card-contents:after {
-  content: "";
-  display: table;
-  clear: both;
-}
 </style>

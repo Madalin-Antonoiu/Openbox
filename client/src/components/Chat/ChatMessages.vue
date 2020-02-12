@@ -79,12 +79,11 @@
         </div>
       </li>
 
-        <div id="ytbSrch" ref="youtubeSearch" class="displayNone">
-          <YoutubeSearch @sendToParent="finallyGetId"/>
-        </div>
+      <div id="ytbSrch" ref="youtubeSearch" class="displayNone">
+        <YoutubeSearch @sendToParent="finallyGetId"/>
+      </div>
 
-      <button @click="youtubePanel" class="red" style="position:absolute; bottom: 75px; right:15px;font-size:11px;">Ytb</button>
-      <button @click="youtubeSearch" class="orange" style="position:absolute; bottom: 75px; right:50px;font-size:11px;">YtbSearch</button>
+ 
 
  
     </ul>
@@ -470,15 +469,7 @@
       this.stored = event.target.id;
       //console.log(event.target.id)
     },
-    youtubePanel(){
-      this.$refs.ytbPanel.classList.toggle('displayNone')
-      this.$refs.ul.classList.toggle('shortenBox')
-      
-      
-    },
-    youtubeSearch(){
-      this.$refs.youtubeSearch.classList.toggle('displayNone')
-    }
+
 
     },
   }
