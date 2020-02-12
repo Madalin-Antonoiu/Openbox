@@ -3,10 +3,23 @@
 
   <div class="utils">
     <p id="emptySend" class="red-text center-align" v-if="feedback"> {{ feedback }}</p>
-    <button @click.prevent="toogleDialogEmoji">😃</button>
-     <button @click="youtubePanel" class="red" style="font-size:11px;">Ytb</button>
-      <button @click="youtubeSearch" class="orange" style="font-size:11px;">YtbSearch</button>
+    <button @click.prevent="toogleDialogEmoji" 
+            @click="myFilter"  style="cursor: pointer;"
+            :class="{orange: isActive, white: !isActive}">
+            😃
+    </button>
 
+    <button @click="youtubePanel"  style="cursor: pointer;"
+            :class="{'orange': this.shown == true, 'white': this.shown == false  }">
+      <i v-show="this.shown==false" class="fas fa-play-circle"></i>
+      <i v-show="this.shown==true"  class="fas fa-pause-circle"></i>
+    </button>
+
+
+    <button :class="{'orange': this.shown2 == true, 'white': this.shown2 == false  }" 
+            @click="youtubeSearch" style=" cursor: pointer;"><i class="fas fa-poll"></i>
+    </button>
+             
 
   </div>
         
@@ -27,13 +40,14 @@
 
     </form>
 
+      
         <VEmojiPicker
           v-show="showDialog"
           labelSearch="Search"
           style="{ width: 4px }"
           @select="onSelectEmoji"
         />
-
+   
 
 
     </div>
@@ -61,7 +75,9 @@
             buffer: [],
             gluglu: false,
             videoId: "",
-            iframeMarkup: ""
+            iframeMarkup: "",
+            shown: false,
+            shown2: false,
         }
     },
     methods: {
@@ -203,6 +219,7 @@
       },//keymonitor
       toogleDialogEmoji() {
         this.showDialog = !this.showDialog;
+
         //You need to give it some delay so the DOM recognizes that you enlarged it, that`s why setTimeout
         setTimeout(function() {  window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight) }, 100); // scroll to bot ;)
       },
@@ -228,15 +245,46 @@
       youtubePanel(){
       document.getElementById('youtube').classList.toggle('displayNone')
       document.getElementById('capture').classList.toggle('shortenBox')
+
+        if( !document.getElementById('youtube').classList.contains('displayNone')){
+          this.shown= true;
+        } else {
+          this.shown= false;
+           
+        }
+       
       },
       youtubeSearch(){
-       document.getElementById('ytbSrch').classList.toggle('displayNone')
+       document.getElementById('ytbSrch').classList.toggle('displayNone');
+
+        if(!document.getElementById('ytbSrch').classList.contains('displayNone')){
+          this.shown2= true;
+          console.log(this.shown2)
+        } else {
+          this.shown2= false;
+           console.log(this.shown2)
+        }
+
+      },
+      myFilter(){
+        this.isActive = !this.isActive;
       }
+
     }, //methods
   }
 </script>
 
 <style lang="css">
+
+
+
+
+
+
+  .shortenBox{
+    height: calc(100vh - 379px);
+  }
+
       /*Cpen*/
   .new-message-area{
     z-index:99999;
@@ -262,6 +310,8 @@
     padding: 5px;
     font-size: 22px;
     border: 1px solid #848484;
+    outline: none;
+    
   }
   form {
     position: relative;

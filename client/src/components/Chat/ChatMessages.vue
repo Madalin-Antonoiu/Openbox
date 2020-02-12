@@ -1,42 +1,43 @@
 <template>
     <div> 
 
-      <div id="youtube" class="displayNone" ref="ytbPanel">
+      
+    <div id="youtube" class="displayNone" ref="ytbPanel">
 
-        <div id="mainView">
-                  
-          <youtube id="playCss"
-              :unique-id="messageid"
-              ref="youtube"
-              :video-id="stored" 
-              :player-vars="playerVars"
-              @ready="ready" 
-              @playing="playing" 
-              @paused="paused"
-              @ended="ended"	
-          ></youtube>
-
-          <div id="buttons"> 
-              <button :id="stored" @click="playAll($event)">Play</button>
-              <button :id="stored" @click="pauseAll($event)">Pause</button>
-              <button :id="stored" @click="seekOnOthers($event)">Sync</button>
-              <button :id="stored" @click="backToStart($event)">Restart</button>
-                      
-              <button :id="stored" @click="muteAll($event)">Mute</button>
-              <button :id="stored" @click="unmuteAll($event)">Unmute</button>
-              <button :id="stored" @click="startTheShow($event)">Show</button>
-              <button :id="stored" @click="stopTheShow($event)">StopShow</button>
-            </div>     
-          <span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
-        
-        </div>
-          
-
+      <div id="mainView">
+      
+        <youtube id="playCss"
+            :unique-id="messageid"
+            ref="youtube"
+            :video-id="stored" 
+            :player-vars="playerVars"
+            @ready="ready" 
+            @playing="playing" 
+            @paused="paused"
+            @ended="ended"
+        ></youtube>
+      
+        <div id="buttons"> 
+            <button :id="stored" @click="playAll($event)">Play</button>
+            <button :id="stored" @click="pauseAll($event)">Pause</button>
+            <button :id="stored" @click="seekOnOthers($event)">Sync</button>
+            <button :id="stored" @click="backToStart($event)">Restart</button>
+                    
+            <button :id="stored" @click="muteAll($event)">Mute</button>
+            <button :id="stored" @click="unmuteAll($event)">Unmute</button>
+            <button :id="stored" @click="startTheShow($event)">Show</button>
+            <button :id="stored" @click="stopTheShow($event)">StopShow</button>
+          </div>     
+        <span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
       
       </div>
+        
+
+    
+    </div>
+
 
       <ul ref="ul" class="chat-messages" v-chat-scroll id="capture"> <!-- capture Must stay here for full chat record image + CLEAR CHAT -->
-       
        <li  ref="chat-message" v-for="message in messages" :key="message.id" :class="{'message right-message': name === message.name, 'message left-message': name !== message.name}">
         <span class="message-avatar"
           :style='
@@ -77,16 +78,16 @@
             <span class="message-info-time">{{ message.timestamp}}</span></div>
 
         </div>
-      </li>
+       </li>
+      </ul>
 
-      <div id="ytbSrch" ref="youtubeSearch" class="displayNone">
-        <YoutubeSearch @sendToParent="finallyGetId"/>
-      </div>
 
- 
+    <div id="ytbSrch" ref="youtubeSearch" class="displayNone">
+        <transition name="bounce">  
+            <YoutubeSearch @sendToParent="finallyGetId"/>
+      </transition>
+    </div>
 
- 
-    </ul>
 
 </div>
 </template>
@@ -98,12 +99,14 @@
   // import YouSyncMessage from '@/components/YouSyncMessage'
   import io from 'socket.io-client'; 
   import YoutubeSearch from '@/components/YoutubeSearch'
+ 
 
   export default {
     name: 'ChatBody',
     props: ['name', 'room'],
     components: {
       YoutubeSearch,
+
     },
     data(){
       return {
@@ -327,155 +330,176 @@
     },
     methods: {
 
-    finallyGetId(params){
-    this.stored = params; // Finally, params are coming from VideoGridItem > SearchResults >YoutubeSearch> HERE . Vuex overrated! ;)
-    },
-    seekOnOthers(event){
-                // Get Sender current time and pass it along seekOnOthers
-                let targetId = event.currentTarget.id;
-
-      this.$refs.youtube.player.getCurrentTime().then(value => {
-        //console.log('The one i clicked seek button is on:'+value)
-        this.socket.emit("seekOnOthers", value, targetId)
-      });
-      
-            },
-    playAll(event){
-      let targetId = event.currentTarget.id; //Needs to be outside here
-      //console.log(targetId + "initiated play");
-            
-      this.$refs.youtube.player.getCurrentTime().then(value => {
-        // Do something with the value here
-                    //console.log('I paused at '+ value)
-                    
-        this.socket.emit("play_all", value, targetId  )
-      });
-    },
-    pauseAll(event){
-      let targetId = event.currentTarget.id;
-
-      this.$refs.youtube.player.getCurrentTime().then(value => {
-        // Do something with the value here
-                    //console.log('I paused at '+ value)
-                  
-        this.socket.emit("pause_all", value, targetId)
-      });
-            },
-            backToStart(event){
-                let targetId = event.currentTarget.id;
-      this.socket.emit("backToStart_all", targetId)
-    },
-            startTheShow(event){
-                
-                // console.log(targetId+ "from outside") checked
+      finallyGetId(params){
+      this.stored = params; // Finally, params are coming from VideoGridItem > SearchResults >YoutubeSearch> HERE . Vuex overrated! ;)
+      },
+      seekOnOthers(event){
+                  // Get Sender current time and pass it along seekOnOthers
                   let targetId = event.currentTarget.id;
-                  this.repetitive = window.setInterval(() => {
-                    //  console.log(targetId + "from inside setInterval") chcked
+
+        this.$refs.youtube.player.getCurrentTime().then(value => {
+          //console.log('The one i clicked seek button is on:'+value)
+          this.socket.emit("seekOnOthers", value, targetId)
+        });
+        
+              },
+      playAll(event){
+        let targetId = event.currentTarget.id; //Needs to be outside here
+        //console.log(targetId + "initiated play");
+              
+        this.$refs.youtube.player.getCurrentTime().then(value => {
+          // Do something with the value here
+                      //console.log('I paused at '+ value)
+                      
+          this.socket.emit("play_all", value, targetId  )
+        });
+      },
+      pauseAll(event){
+        let targetId = event.currentTarget.id;
 
         this.$refs.youtube.player.getCurrentTime().then(value => {
           // Do something with the value here
-          //console.log(value)
-          
-          this.socket.emit("getCurrentTime", value, targetId)
-          
+                      //console.log('I paused at '+ value)
+                    
+          this.socket.emit("pause_all", value, targetId)
         });
+              },
+              backToStart(event){
+                  let targetId = event.currentTarget.id;
+        this.socket.emit("backToStart_all", targetId)
+      },
+              startTheShow(event){
+                  
+                  // console.log(targetId+ "from outside") checked
+                    let targetId = event.currentTarget.id;
+                    this.repetitive = window.setInterval(() => {
+                      //  console.log(targetId + "from inside setInterval") chcked
+
+          this.$refs.youtube.player.getCurrentTime().then(value => {
+            // Do something with the value here
+            //console.log(value)
+            
+            this.socket.emit("getCurrentTime", value, targetId)
+            
+          });
 
 
-        }, 1500)
-            },
-            stopTheShow(){
-                window.clearInterval(this.repetitive);
-            },
+          }, 1500)
+              },
+              stopTheShow(){
+                  window.clearInterval(this.repetitive);
+              },
 
-    ready (event) { //This guys tells me state of player, OH it shouts automatically
-        this.player = event.target;
-        console.log('Player is ready.')
-        this.socket.emit("ready");
-    },
-    ended (){
-      console.log('Yay. You`ve stayed until the end . Video ended!')
-      this.socket.emit("ended");
-    }, 
-    playVideo() {
-      this.player.playVideo()
-    },
-    pauseVideo(){
-      this.player.pauseVideo()
-    },
-    // seekTo(){
-    // 	this.player.seekTo(5 , true)
-    // },
+      ready (event) { //This guys tells me state of player, OH it shouts automatically
+          this.player = event.target;
+          console.log('Player is ready.')
+          this.socket.emit("ready");
+      },
+      ended (){
+        console.log('Yay. You`ve stayed until the end . Video ended!')
+        this.socket.emit("ended");
+      }, 
+      playVideo() {
+        this.player.playVideo()
+      },
+      pauseVideo(){
+        this.player.pauseVideo()
+      },
+      // seekTo(){
+      // 	this.player.seekTo(5 , true)
+      // },
 
-    muteAll(){
-      this.socket.emit("mute_all")
-    },
-    unmuteAll(){
-      this.socket.emit("unmute_all")
-    },
-    changeSong(){
-      // console.log(this.youtubeId); OK check
-      
-      // TO DO - Determine if playlist and play it all!
-
-      //Determine if typed a full link or just ID
-      if  (this.youtubeId.includes("www.youtube.com/watch")){
-        this.socket.emit("changeSong_all", this.$youtube.getIdFromUrl(this.youtubeId))
-        //this.$refs.youtubeIdInput.value="";
-      } else {
-        this.socket.emit("changeSong_all", this.youtubeId)
-        //this.$refs.youtubeIdInput.value="";
-      }
-
-      
+      muteAll(){
+        this.socket.emit("mute_all")
+      },
+      unmuteAll(){
+        this.socket.emit("unmute_all")
+      },
+      changeSong(){
+        // console.log(this.youtubeId); OK check
         
-        //console.log(this.youtubeId)	
-        //So it can access data () with this
-    },
+        // TO DO - Determine if playlist and play it all!
 
-    // All clients call these automatically when the API itself detects change
-    // playing () {
+        //Determine if typed a full link or just ID
+        if  (this.youtubeId.includes("www.youtube.com/watch")){
+          this.socket.emit("changeSong_all", this.$youtube.getIdFromUrl(this.youtubeId))
+          //this.$refs.youtubeIdInput.value="";
+        } else {
+          this.socket.emit("changeSong_all", this.youtubeId)
+          //this.$refs.youtubeIdInput.value="";
+        }
 
-    // 	// Don't initialize state here, but on server and receive ;)
-    // 	//this.state = "playing"
-
-    // 	this.player.getCurrentTime().then(value => {
-    // 		// Do something with the value here
-    // 		//console.log('See'+ value)
         
-    // 		this.socket.emit("playing", value)
-    // 	});
           
-    // },
-    // paused () {
-      
-    // 	this.player.getCurrentTime().then(value => {
-    // 		// Do something with the value here
-    // 		//console.log('I paused at '+ value)
-    // 		this.socket.emit("paused", value)
-    // 	});
+          //console.log(this.youtubeId)	
+          //So it can access data () with this
+      },
 
-    // },
+      // All clients call these automatically when the API itself detects change
+      // playing () {
 
-    // buffering (){
-    // 	//this.value = this.player.getPlayerState()
-      
-    // 	this.socket.emit("buffering");
-    // }, 
-    getNotifications(){
-      if (this.state !== "")
-      console.log(this.state)
-    },
-    sendID(event){
-      this.stored = event.target.id;
-      //console.log(event.target.id)
-    },
+      // 	// Don't initialize state here, but on server and receive ;)
+      // 	//this.state = "playing"
+
+      // 	this.player.getCurrentTime().then(value => {
+      // 		// Do something with the value here
+      // 		//console.log('See'+ value)
+          
+      // 		this.socket.emit("playing", value)
+      // 	});
+            
+      // },
+      // paused () {
+        
+      // 	this.player.getCurrentTime().then(value => {
+      // 		// Do something with the value here
+      // 		//console.log('I paused at '+ value)
+      // 		this.socket.emit("paused", value)
+      // 	});
+
+      // },
+
+      // buffering (){
+      // 	//this.value = this.player.getPlayerState()
+        
+      // 	this.socket.emit("buffering");
+      // }, 
+      getNotifications(){
+        if (this.state !== "")
+        console.log(this.state)
+      },
+      sendID(event){
+        this.stored = event.target.id;
+        //console.log(event.target.id)
+      },
 
 
-    },
+      },
   }
 </script>
 
 <style lang="css">
+
+  .bounce-enter-active {
+  animation: bounce-in .5s;
+}
+.bounce-leave-active {
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+
   #ytbSrch{
     position:absolute;
     top:280px;
@@ -541,19 +565,21 @@
     background:chocolate; */
     /* width:100%; */
     padding:5px;
+    transition: all .5s ease-in-out;
   }
 
-
-  .shortenBox{
-    height: calc(100vh - 379px);
-  }
 
   /*.chat-messages*/
   .chat-messages {
+   
+    /* transform: scale(1,-1); */
+    /* padding-top:2px;
+    padding-bottom:2px; */
+    z-index:1;
     overflow-y: auto;
     padding: 10px;
     background-color: #fcfcfe;
-    
+    height: calc(100vh - 153px);
      /*Ca sa dea exact minus header si new message*/ 
 
     /*Container Control
@@ -659,6 +685,7 @@
   
   #main-view{
       /* position:relative; */
+      
   }
 
   /*Responsive Yt Embeds*/ 
@@ -701,6 +728,7 @@
       width:100%;
   }
   #playCss{
+     
       /* display:none; */
       width:100%;
       max-height:190px;
