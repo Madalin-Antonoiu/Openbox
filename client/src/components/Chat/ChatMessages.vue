@@ -501,8 +501,8 @@
 
 
   #ytbSrch{
-    position:absolute;
-    top:280px;
+    position:fixed;
+    bottom:100px;
     height:250px;
     width:100%;
     max-width:550px;
