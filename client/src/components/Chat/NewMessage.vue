@@ -3,13 +3,14 @@
 
   <div class="utils">
     <p id="emptySend" class="red-text center-align" v-if="feedback"> {{ feedback }}</p>
+    
     <button @click.prevent="toogleDialogEmoji" 
             @click="myFilter"  style="cursor: pointer;"
             :class="{orange: isActive, white: !isActive}">
             😃
     </button>
 
-    <button @click="youtubePanel"  style="cursor: pointer;"
+    <button @click="youtubePanel"  style="cursor: pointer; " 
             :class="{'orange': this.shown == true, 'white': this.shown == false  }">
       <i v-show="this.shown==false" class="fas fa-play-circle"></i>
       <i v-show="this.shown==true"  class="fas fa-pause-circle"></i>
@@ -366,6 +367,7 @@
       }
   .utils button{
     font-size: 14px;
+    margin-right: 5px;
   }
   .utils {
     padding-left: 10px;

@@ -40,6 +40,8 @@ export default {
         // Reset input field
         this.searchString = '';
       }
+            setTimeout(function() {  window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight) }, 100); // scroll to bot ;)
+
     }
   }
 };

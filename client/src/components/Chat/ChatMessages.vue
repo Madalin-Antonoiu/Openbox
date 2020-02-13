@@ -1,49 +1,48 @@
 <template>
-    <div> 
-
-      <ul ref="ul" class="chat-messages" v-chat-scroll id="capture"> <!-- capture Must stay here for full chat record image + CLEAR CHAT -->
-       <li  ref="chat-message" v-for="message in messages" :key="message.id" :class="{'message right-message': name === message.name, 'message left-message': name !== message.name}">
-        <span class="message-avatar"
-          :style='
-            [ name !== message.name ?
-              { backgroundImage: "url(" + "https://image.flaticon.com/icons/svg/547/547420.svg" + ")"} :
-              { backgroundImage: "url(" + "https://image.flaticon.com/icons/svg/1596/1596810.svg" + ")"}
-            ]'>
-        </span>
-        <div class="message-bubble">
-          <div class="message-info">
-            <span v-if="name !== message.name" class="message-info-name">{{ message.name }}</span>
-          </div>
-                    <!-- :style='
-            [ message.embed ?
-              { maxWidth: "100%", width: "350px"} :
-              { maxWidth: "180px"}
-            ]' -->
-          <div class="message-text" 
-
-          
-          
-          >
-
-            <span v-if="message.embed">
-              <div class="video-container" ref="parent">
-                <!-- <YouSyncMessage :leID="message.embed" :messageid="message.id"/> -->
-                <!-- <iframe width="560" height="315" loading="lazy"
-                  :src=" 'https://www.youtube.com/embed/' + message.embed" 
-                  frameborder="0" 
-                  allowfullscreen>
-                </iframe>  TURNED OFF FOR NOW-->
-                <button :id="message.embed" class="btn-small" style="position:absolute;bottom:0;" @click="sendID($event)">+</button>
-              </div>
-            </span>
-
-            {{ message.content }}   
-            
-            <span class="message-info-time">{{ message.timestamp}}</span></div>
-
+  <div> 
+    <ul ref="ul" class="chat-messages" v-chat-scroll id="capture"> <!-- capture Must stay here for full chat record image + CLEAR CHAT -->
+      <li  ref="chat-message" v-for="message in messages" :key="message.id" :class="{'message right-message': name === message.name, 'message left-message': name !== message.name}">
+      <span class="message-avatar"
+        :style='
+          [ name !== message.name ?
+            { backgroundImage: "url(" + "https://image.flaticon.com/icons/svg/547/547420.svg" + ")"} :
+            { backgroundImage: "url(" + "https://image.flaticon.com/icons/svg/1596/1596810.svg" + ")"}
+          ]'>
+      </span>
+      <div class="message-bubble">
+        <div class="message-info">
+          <span v-if="name !== message.name" class="message-info-name">{{ message.name }}</span>
         </div>
-       </li>
-      </ul>
+                  <!-- :style='
+          [ message.embed ?
+            { maxWidth: "100%", width: "350px"} :
+            { maxWidth: "180px"}
+          ]' -->
+        <div class="message-text" 
+
+        
+        
+        >
+
+          <span v-if="message.embed">
+            <div class="video-container" ref="parent">
+              <!-- <YouSyncMessage :leID="message.embed" :messageid="message.id"/> -->
+              <!-- <iframe width="560" height="315" loading="lazy"
+                :src=" 'https://www.youtube.com/embed/' + message.embed" 
+                frameborder="0" 
+                allowfullscreen>
+              </iframe>  TURNED OFF FOR NOW-->
+              <button :id="message.embed" class="btn-small" style="position:absolute;bottom:0;" @click="sendID($event)">+</button>
+            </div>
+          </span>
+
+          {{ message.content }}   
+          
+          <span class="message-info-time">{{ message.timestamp}}</span></div>
+
+      </div>
+      </li>
+    </ul>
 
     <div id="youtube" class="displayNone" ref="ytbPanel">
 
@@ -135,7 +134,8 @@
         </transition>
       </div>
 
-</div>
+  
+  </div>
 </template>
 
 <script>
@@ -176,7 +176,8 @@
         personalTime: "",
         difference: 0,
         check: false,
-        repetitive: null
+        repetitive: null,
+      
       }
     },
     created(){
@@ -201,25 +202,7 @@
       })
     },
     mounted(){
-            //  console.dir(this.$refs); 
 
-
-
-            // console.dir(this.$refs.madut.$el.attributes[1].value)  
-           
-            // console.dir(this.$refs[youtube]); 
-            // if (this.$refs[youtube].$attrs.unique-id.contains("S09GwSyHviNDEGYYFpDO"))
-            // console.log(this.$refs[youtube])
-            //console.log(youtube)
-
-			//Check state every second for other player, not self
-			// window.setInterval(() => {
-			// 	this.getNotifications()
-			// }, 1000)
-		
-			
-
-				
 			this.socket.on('getCurrentTime', data => {  
 
 				//Restul 3 primesc asta
@@ -297,6 +280,21 @@
                 //this.events.push(data);
 				this.$refs.youtube.player.seekTo(0, true)	
 			})
+      this.socket.on('playing', data => {  
+				//this.state = data.id + " is " + data.action;
+
+				console.log("This state is now :" + this.state ) //Works
+				//console.log(data.action + " " + data.id) //Works
+				this.state = data.id + " is " + data.action + " at "+ data.currentTime;
+				
+				this.events.push(data);
+			})
+
+			this.socket.on('paused', data => {  
+
+				this.state = data.id + " is " + data.action;
+				this.events.push(data);		
+			})
 
 			//Shutting this off for it is annoying atm
 			//var username = prompt('What\'s your username?');
@@ -307,22 +305,7 @@
 
 				// Sectia primire de catre Client inapoi de la server
 
-      this.socket.on('playing', data => {  
-				//this.state = data.id + " is " + data.action;
 
-				//console.log("This state is now :" + this.state ) //Works
-				//console.log(data.action + " " + data.id) //Works
-				this.state = data.id + " is " + data.action + " at "+ data.currentTime;
-				
-				this.events.push(data);
-			})
-
-
-			this.socket.on('paused', data => {  
-
-				this.state = data.id + " is " + data.action;
-				this.events.push(data);		
-			})
 
 			this.socket.on('disconnect', data => {  
 				this.events.push(data);
@@ -721,6 +704,7 @@
     background-position: center;
     background-size: cover;
     border-radius: 50%;
+    margin-left: 5px;
   }
  
 
@@ -832,7 +816,7 @@
 
   ul.list-container  {
       list-style-type: none;
-      font-size: 10px;
+      font-size: 11px;
       height: 150px;
       /* width:400px; */
       margin:0;
