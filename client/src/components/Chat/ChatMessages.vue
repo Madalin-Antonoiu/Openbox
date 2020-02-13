@@ -2,39 +2,6 @@
     <div> 
 
       
-    <div id="youtube" class="displayNone" ref="ytbPanel">
-
-      <div id="mainView">
-      
-        <youtube id="playCss"
-            :unique-id="messageid"
-            ref="youtube"
-            :video-id="stored" 
-            :player-vars="playerVars"
-            @ready="ready" 
-            @playing="playing" 
-            @paused="paused"
-            @ended="ended"
-        ></youtube>
-      
-        <div id="buttons"> 
-            <button :id="stored" @click="playAll($event)">Play</button>
-            <button :id="stored" @click="pauseAll($event)">Pause</button>
-            <button :id="stored" @click="seekOnOthers($event)">Sync</button>
-            <button :id="stored" @click="backToStart($event)">Restart</button>
-                    
-            <button :id="stored" @click="muteAll($event)">Mute</button>
-            <button :id="stored" @click="unmuteAll($event)">Unmute</button>
-            <button :id="stored" @click="startTheShow($event)">Show</button>
-            <button :id="stored" @click="stopTheShow($event)">StopShow</button>
-          </div>     
-        <span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
-      
-      </div>
-        
-
-    
-    </div>
 
 
       <ul ref="ul" class="chat-messages" v-chat-scroll id="capture"> <!-- capture Must stay here for full chat record image + CLEAR CHAT -->
@@ -81,13 +48,43 @@
        </li>
       </ul>
 
+    <div id="youtube" class="displayNone" ref="ytbPanel">
 
-    <div id="ytbSrch" ref="youtubeSearch" class="displayNone">
-        <transition name="bounce">  
-            <YoutubeSearch @sendToParent="finallyGetId"/>
-      </transition>
+      <div id="mainView">
+      
+        <youtube id="playCss"
+            :unique-id="messageid"
+            ref="youtube"
+            :video-id="stored" 
+            :player-vars="playerVars"
+            @ready="ready" 
+            @playing="playing" 
+            @paused="paused"
+            @ended="ended"
+        ></youtube>
+      
+        <div id="buttons"> 
+            <button :id="stored" @click="playAll($event)">Play</button>
+            <button :id="stored" @click="pauseAll($event)">Pause</button>
+            <button :id="stored" @click="seekOnOthers($event)">Sync</button>
+            <button :id="stored" @click="backToStart($event)">Restart</button>
+                    
+            <button :id="stored" @click="muteAll($event)">Mute</button>
+            <button :id="stored" @click="unmuteAll($event)">Unmute</button>
+            <button :id="stored" @click="startTheShow($event)">Show</button>
+            <button :id="stored" @click="stopTheShow($event)">StopShow</button>
+          </div>     
+        <span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
+      
+      </div>
+      
     </div>
 
+    <div id="ytbSrch" ref="youtubeSearch" class="displayNone">
+          <transition name="bounce">  
+              <YoutubeSearch @sendToParent="finallyGetId"/>
+        </transition>
+      </div>
 
 </div>
 </template>
@@ -501,9 +498,9 @@
 
 
   #ytbSrch{
-    position:fixed;
-    bottom:100px;
-    height:250px;
+    /* position:fixed;
+    bottom:100px; */
+    max-height:250px;
     width:100%;
     max-width:550px;
     background:orange;

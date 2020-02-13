@@ -244,7 +244,10 @@
       },
       youtubePanel(){
       document.getElementById('youtube').classList.toggle('displayNone')
-      document.getElementById('capture').classList.toggle('shortenBox')
+
+      // document.getElementById('capture').classList.toggle('shortenBox')
+        setTimeout(function() {  window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight) }, 100); // scroll to bot ;)
+
 
         if( !document.getElementById('youtube').classList.contains('displayNone')){
           this.shown= true;
@@ -256,6 +259,7 @@
       },
       youtubeSearch(){
        document.getElementById('ytbSrch').classList.toggle('displayNone');
+      setTimeout(function() {  window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight) }, 100); // scroll to bot ;)
 
         if(!document.getElementById('ytbSrch').classList.contains('displayNone')){
           this.shown2= true;
