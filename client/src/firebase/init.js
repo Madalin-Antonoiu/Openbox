@@ -1,8 +1,9 @@
-import firebase from 'firebase';
-import firestore from 'firebase/firestore';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+// import firestore from 'firebase/firestore';
 
 // Your web app's Firebase configuration
-  var firebaseConfig = {
+var firebaseConfig = {
     apiKey: "AIzaSyCVF7yN6SqegkvQShT32RK6LjgC54DEEwk",
     authDomain: "vue-realtime-chatapp.firebaseapp.com",
     databaseURL: "https://vue-realtime-chatapp.firebaseio.com",
@@ -11,12 +12,11 @@ import firestore from 'firebase/firestore';
     messagingSenderId: "367302784328",
     appId: "1:367302784328:web:e2a509939f81c4b1f96f7d",
     measurementId: "G-04KZWX453H"
-  };
-  // Initialize Firebase
-  const firebaseApp = firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
+};
+// Initialize Firebase
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+// firebase.analytics();
 
-  firebaseApp.firestore().settings({ timestampsInSnapshots: true});
+// firebaseApp.firestore().settings({ timestampsInSnapshots: true});
 
-  export default firebaseApp.firestore()
-
+export default firebaseApp.firestore()

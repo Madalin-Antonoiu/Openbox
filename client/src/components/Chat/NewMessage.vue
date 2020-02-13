@@ -78,6 +78,7 @@
             iframeMarkup: "",
             shown: false,
             shown2: false,
+            isActive: false 
         }
     },
     methods: {
@@ -263,10 +264,10 @@
 
         if(!document.getElementById('ytbSrch').classList.contains('displayNone')){
           this.shown2= true;
-          console.log(this.shown2)
+          // console.log(this.shown2)
         } else {
           this.shown2= false;
-           console.log(this.shown2)
+          //  console.log(this.shown2)
         }
 
       },

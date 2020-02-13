@@ -41,17 +41,17 @@ export default new Router({
                 }
             },
         },
-        {
-            path: '/chat',
-            name: 'Chat',
-            component: Chat,
-            beforeEnter(to, from, next) {
-                if (to.params.name && to.params.room) {
-                    next()
-                } else {
-                    next({ name: 'Welcome' })
-                }
-            }
-        },
+        // {
+        //     path: '/chat',
+        //     name: 'Chat',
+        //     component: Chat,
+        //     beforeEnter(to, from, next) {
+        //         if (to.params.name && to.params.room) {
+        //             next()
+        //         } else {
+        //             next({ name: 'Welcome' })
+        //         }
+        //     }
+        // },
     ]
 })
