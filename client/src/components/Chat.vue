@@ -7,9 +7,7 @@
       <NewMessage :name="name" :room="room" />
     </div>
 
-    <!-- <div id="sync">
-      <YouSync />
-    </div>
+
    -->
 
     <!-- <footer id="footer">
@@ -24,7 +22,7 @@
   import ChatHeader from '@/components/Chat/ChatHeader'
   import ChatMessages from '@/components/Chat/ChatMessages'
   import NewMessage from '@/components/Chat/NewMessage'
-  // import YouSync from '@/components/YouSync'
+ 
 
   export default {
     name: 'Chat',
@@ -33,7 +31,7 @@
       ChatHeader,
       ChatMessages,
       NewMessage,
-      // YouSync,
+
     },
 }
 

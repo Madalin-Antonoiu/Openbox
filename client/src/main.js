@@ -6,20 +6,18 @@ import VueYoutube from 'vue-youtube'
 import VueChatScroll from 'vue-chat-scroll'
 import moment from 'moment'
 
-
-
 Vue.use(VueChatScroll)
 Vue.use(VueYoutube)
 
-
+Vue.filter('formatDate', function(value) {
+    if (!value) return ''
+    return moment(value.toString()).fromNow();
+})
 
 new Vue({
     router,
     render: h => h(App),
 }).$mount('#app')
-
-
-
 
 Vue.component('dynamic-from-now', {
     name: 'DynamicFromNow',

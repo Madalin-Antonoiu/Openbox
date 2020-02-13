@@ -1,9 +1,6 @@
 <template>
     <div> 
 
-      
-
-
       <ul ref="ul" class="chat-messages" v-chat-scroll id="capture"> <!-- capture Must stay here for full chat record image + CLEAR CHAT -->
        <li  ref="chat-message" v-for="message in messages" :key="message.id" :class="{'message right-message': name === message.name, 'message left-message': name !== message.name}">
         <span class="message-avatar"
@@ -52,28 +49,80 @@
 
       <div id="mainView">
       
-        <youtube id="playCss"
-            :unique-id="messageid"
-            ref="youtube"
-            :video-id="stored" 
-            :player-vars="playerVars"
-            @ready="ready" 
-            @playing="playing" 
-            @paused="paused"
-            @ended="ended"
-        ></youtube>
-      
-        <div id="buttons"> 
-            <button :id="stored" @click="playAll($event)">Play</button>
-            <button :id="stored" @click="pauseAll($event)">Pause</button>
-            <button :id="stored" @click="seekOnOthers($event)">Sync</button>
-            <button :id="stored" @click="backToStart($event)">Restart</button>
-                    
-            <button :id="stored" @click="muteAll($event)">Mute</button>
-            <button :id="stored" @click="unmuteAll($event)">Unmute</button>
-            <button :id="stored" @click="startTheShow($event)">Show</button>
-            <button :id="stored" @click="stopTheShow($event)">StopShow</button>
-          </div>     
+     
+        <div class="col1">
+            <youtube id="playCss"
+                ref="youtube"
+                :video-id="stored" 
+                :player-vars="playerVars"
+                @ready="ready" 
+                @playing="playing" 
+                @paused="paused"
+                @ended="ended"
+            ></youtube>
+          
+            <div id="buttons"> 
+                <button :id="stored" @click="playAll($event)">Play</button>
+                <button :id="stored" @click="pauseAll($event)">Pause</button>
+                <button :id="stored" @click="seekOnOthers($event)">Sync</button>
+                <button :id="stored" @click="backToStart($event)">Restart</button>
+                        
+                <button :id="stored" @click="muteAll($event)">Mute</button>
+                <button :id="stored" @click="unmuteAll($event)">Unmute</button>
+                <button :id="stored" @click="startTheShow($event)">Show</button>
+                <button :id="stored" @click="stopTheShow($event)">StopShow</button>
+            </div>   
+
+        </div>
+
+        <div class="col2">
+          <div id="youtubeLogs">
+            <div id="bar"> 
+              <!-- <span id="whatfor">Logs</span> -->
+              
+              <div id="red"></div>
+              <div id="yellow"></div>
+              <div id="green"></div>
+            </div>
+            <ul class="list-container" v-chat-scroll > 
+              <li 
+                  v-for="(event, i) in events" :key="`${i}-${event.id}`"
+                  ref="playingPaused"
+              
+              > 
+                <span class="id">{{event.id}} </span>  <!-- .substring(0, 8)-->
+                <span :class="{'play': event.action.includes('playing'), 
+                  'pause': event.action.includes('paused'), 
+                  '': event.action == 'joined room.', 
+                  'leftRoom': event.action == 'left room.',
+                  'endView' : event.action == 'ended watching.',
+                          
+                          }"
+                  > {{event.action}}
+                </span>   
+
+                          <a style="color: lightblue" 
+                          class="videoid" 
+                          v-if="event.videoid" 
+                          :href="'https://www.youtube.com/watch?v='+event.videoid"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          >link</a>
+
+                          <span v-if="event.currentTime">{{event.currentTime}} </span>
+                          <!--<span v-if="event.playCurrentTime">{{event.playCurrentTime}} </span> -->
+          
+                <span v-if="event.senderCurrentTime">{{event.senderCurrentTime}} </span>
+                <!-- <span ref="fromNow" >{{ event.timestamp  }}</span>   Future reference, or local component-->
+                <dynamic-from-now class="timestamp" :interval="60000"></dynamic-from-now>
+              </li>
+            </ul>
+            <!--<button id="clear" >Delete</button> <! @click="clearLogs"-->
+          </div>
+        </div>
+    
+
+
         <span ref="alert" id="alert" :v-if="this.alert === 'Resyncing. Clients not in sync.'" >{{this.alert}} </span>
       
       </div>
@@ -126,7 +175,6 @@
         state: "",
         personalTime: "",
         difference: 0,
-        uniqueID: this.messageid,
         check: false,
         repetitive: null
       }
@@ -259,8 +307,7 @@
 
 				// Sectia primire de catre Client inapoi de la server
 
-            // I can do click on player playing/ paused after
-            this.socket.on('playing', data => {  
+      this.socket.on('playing', data => {  
 				//this.state = data.id + " is " + data.action;
 
 				//console.log("This state is now :" + this.state ) //Works
@@ -433,28 +480,29 @@
       },
 
       // All clients call these automatically when the API itself detects change
-      // playing () {
 
-      // 	// Don't initialize state here, but on server and receive ;)
-      // 	//this.state = "playing"
+      playing () {
 
-      // 	this.player.getCurrentTime().then(value => {
-      // 		// Do something with the value here
-      // 		//console.log('See'+ value)
+      	// Don't initialize state here, but on server and receive ;)
+      	this.state = "playing"
+
+      	this.player.getCurrentTime().then(value => {
+      		// Do something with the value here
+      		//console.log('See'+ value)
           
-      // 		this.socket.emit("playing", value)
-      // 	});
+      		this.socket.emit("playing", value)
+      	});
             
-      // },
-      // paused () {
+      },
+      paused () {
         
-      // 	this.player.getCurrentTime().then(value => {
-      // 		// Do something with the value here
-      // 		//console.log('I paused at '+ value)
-      // 		this.socket.emit("paused", value)
-      // 	});
+      	this.player.getCurrentTime().then(value => {
+      		// Do something with the value here
+      		//console.log('I paused at '+ value)
+      		this.socket.emit("paused", value)
+      	});
 
-      // },
+      },
 
       // buffering (){
       // 	//this.value = this.player.getPlayerState()
@@ -513,20 +561,17 @@
   #mainView iframe {
     width: 100%;
     /* max-width:100%; */
-    margin:0 auto;
-    /*max-width: 500px; /* Also helpful. Optional. */
+    /* margin:0 auto; Dont want it centered now */
+
      display:block; 
-     /* height:300px; */
+
 
   }
   #mainView #buttons {
     max-width:338px;
-    /* max-width:100%; */
-    margin:0 auto;
-    /*max-width: 500px; /* Also helpful. Optional. */
+    /* margin:0 auto; Dont want it centered now */
      display:block; 
-     /* height:100%;
-     max-height:500px; */
+
   }
     #buttons button{
       background-color:lightseagreen;
@@ -733,80 +778,81 @@
       
   }
 
-  ul.list-container  {
-      list-style-type: none;
-      font-size: 14px;
-      height: 150px;
-      /* width:400px; */
-      margin:0;
-      overflow-y: auto;
-      background-color: #33485E;
-      color:#ffffff;
-      padding: 12px;
-      border-radius: 0px 0px 8px 8px;
-  }
-  .timestamp{
-      opacity: 0.75;
-      font-size:12px;
-      color: #ffffff;
-      font-weight: 400;
-      padding-left:3px;
-      float: right;
-  }
+
+
 
   /*MacOs Terminal*/ 
 
 	#bar {
+     width:100%;
 			text-align: center;
 			/* width: 424px; */
-			height: 25px;
-			background-color: #DAD9D9;
+			height: 20px;
+			background-color: rgb(156, 143, 117);
 			margin: 0 ;
 			font-family: monospace;
 			padding: auto;
 			float: none;
-			border-radius: 5px;
+			border-radius: 5px 5px 0px 0px ;
 			position: relative;
+      padding:3px;
 	}
 	#red {
 			background-color: #E94B35;
 			border-radius: 100%;
 			width: 15px;
 			height: 15px;
-			margin: 0 auto;
-			left: -200px;
-			bottom: -20%;
-			position:relative;
+      float:right;
+      opacity:0.6;
+		  margin-left:5px;
 	}
 	#yellow {
 			background-color: #f0f000;
 			border-radius: 100%;
 			width: 15px;
 			height: 15px;
-			margin: 0 auto;
-			left: -180px;
-			bottom: 40%;
-			position:relative;
-			display: block;
+		 float:right;
+			/* left: -180px;
+			bottom: 40%; */
+		 opacity:0.6;
+		 margin-left:5px;
 	}
 	#green {
 			background-color: #1AAF5C;
 			border-radius: 100%;
 			width: 15px;
 			height: 15px;
-			margin: 0 auto;
-			left: -160px;
-			bottom: 99%;
-			position:relative;
-			display: block;
+			/* margin: 0 auto; */
+			/* left: -160px;
+			bottom: 99%; */
+	    float:right;
+		 opacity:0.6;
+     margin-left:5px;
 	}
-  #whatfor{
-        position: absolute;
-        height: 15px;
-        left: 170px;
-        top: 5px;
+
+  ul.list-container  {
+      list-style-type: none;
+      font-size: 10px;
+      height: 150px;
+      /* width:400px; */
+      margin:0;
+      overflow-y: auto;
+      background-color: #33485E;
+      color:#ffffff;
+      padding: 4px 8px 8px 8px;
+      border-radius: 0px 0px 8px 8px;
+      min-height: 194px;
   }
  
+   .timestamp{
+      opacity: 0.75;
+      font-size:9px;
+      color: #ffffff;
+      font-weight: 400;
+      padding-left:3px;
+      float: right;
+  }
+
   #clear{
       float: right;
   }
@@ -827,6 +873,19 @@
   .endView{
       color: #ff6347
   }
-
+  .col1{
+    float:left;
+    max-width: 338px;
+  }
+  .col2{
+    float:left;
+    width: calc(100% - 338px);
+    padding-left:2px;
+  }
+  #mainView:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 
 </style>
